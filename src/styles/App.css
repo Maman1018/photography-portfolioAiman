@@ -194,3 +194,42 @@ h1 {
     flex-wrap: wrap;
   }
 }
+
+/* Container for the bottom subtitle */
+.cinematic-subtitle {
+  position: absolute;
+  bottom: 3rem; /* Distance from bottom */
+  left: 0;
+  width: 100%;
+  text-align: center;
+  pointer-events: none; /* Let clicks pass through */
+
+  /* Font Styling */
+  font-family: 'Trajan Pro', serif; /* Match your theme */
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  color: #E71D23; /* The Red Color */
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 1s ease; /* Smooth fade in/out */
+  z-index: 100;
+}
+
+/* Fade Classes controlled by React */
+.cinematic-subtitle.fade-in {
+  opacity: 1;
+}
+
+.cinematic-subtitle.fade-out {
+  opacity: 0;
+}
+
+/* Mobile tweak */
+@media (max-width: 768px) {
+  .cinematic-subtitle {
+    bottom: 2rem;
+    font-size: 0.7rem;
+    padding: 0 20px;
+    line-height: 1.4;
+  }
+}
