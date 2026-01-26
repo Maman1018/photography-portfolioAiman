@@ -69,7 +69,7 @@ function Home() {
             <span className="toc-dots"></span>
             <span className="toc-number">I</span>
           </Link>
-          <a href="mailto:coolmaman59@email.com" className="toc-item">
+          <a href="mailto:coolmaman59@gmail.com" className="toc-item">
             <span className="toc-label">CONTACT</span>
             <span className="toc-dots"></span>
             <span className="toc-number">II</span>
