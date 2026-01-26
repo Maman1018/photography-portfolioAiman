@@ -2,28 +2,38 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './styles/Home.css';
 import FuzzyText from './component/FuzzyText';
-import Shuffle from './component/Shuffle'; // <--- 1. Import it
+import Shuffle from './component/Shuffle';
+import DustEffect from './component/DustEffect';
 
 function Home() {
-  // State to control visibility
+  // 1. Controls if the component is physically in the DOM
+  const [mountSubtitle, setMountSubtitle] = useState(false);
+
+  // 2. Controls if the component is "Stable" (true) or "Exploding" (false)
   const [showSubtitle, setShowSubtitle] = useState(false);
 
   useEffect(() => {
-    // Timer 1: Wait 3 seconds, then SHOW the subtitle
+    // Timer 1 (3s): Put text on screen AND set it to visible
     const startTimer = setTimeout(() => {
+      setMountSubtitle(true);
       setShowSubtitle(true);
     }, 3000);
 
-    // Timer 2: Wait 3s (delay) + 7s (reading time), then HIDE it
-    // Total: 10 seconds from page load
+    // Timer 2 (10s): Tell DustEffect to explode!
+    // IMPORTANT: We do NOT remove 'mountSubtitle' yet. The text must exist to be exploded.
     const endTimer = setTimeout(() => {
       setShowSubtitle(false);
     }, 10000);
 
-    // Cleanup timers if user leaves page
+    // Optional: Cleanup (12s) - Remove from DOM after dust settles
+    const cleanupTimer = setTimeout(() => {
+      setMountSubtitle(false);
+    }, 40000);
+
     return () => {
       clearTimeout(startTimer);
       clearTimeout(endTimer);
+      clearTimeout(cleanupTimer);
     };
   }, []);
 
@@ -64,12 +74,13 @@ function Home() {
         </nav>
 
         {/* --- THE SUBTITLE --- */}
-        {/* We use conditional rendering (&&) so it physically mounts/unmounts */}
-        <div className={`cinematic-subtitle ${showSubtitle ? 'fade-in' : 'fade-out'}`}>
-           {showSubtitle && (
-             <Shuffle
-
-               text="It's Stranger Things, I know, a part of my teenage year is finally completed, considers this an homage"
+        <div className={`cinematic-subtitle ${mountSubtitle ? 'fade-in' : ''}`}>
+           {/* Only render if 'mountSubtitle' is true */}
+           {mountSubtitle && (
+             <DustEffect isVisible={showSubtitle}>
+               {/* Inside here, we render UNCONDITIONALLY so it doesn't vanish before explosion */}
+               <Shuffle
+                 text="It's Stranger Things, I know, a part of my teenage year is finally completed, considers this an homage"
                  shuffleDirection="right"
                  duration={0.5}
                  animationMode="evenodd"
@@ -82,7 +93,9 @@ function Home() {
                  respectReducedMotion={true}
                  loop={false}
                  loopDelay={0}
-             />
+                 autoPlay={true}
+               />
+             </DustEffect>
            )}
         </div>
       </div>

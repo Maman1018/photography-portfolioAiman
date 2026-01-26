@@ -7,10 +7,18 @@
     font-style: normal;
 }
 
+/* 1. Global fix for the scrollbar */
+html, body {
+    overflow-x: hidden; /* Forcibly hide horizontal scrollbar */
+    overflow-y: hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
 
 .landing-container {
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -19,6 +27,8 @@
   text-align: center;
   padding-top: 20vh;
   box-sizing: border-box;
+
+  overflow: hidden;
 }
 
 .landing-content{
@@ -142,5 +152,40 @@
 @media (max-width: 768px) {
   .hero-title {
     font-size: 3.5rem;
+  }
+}
+
+/* Container for the bottom subtitle */
+.cinematic-subtitle {
+  position: absolute;
+  bottom: 3rem; /* Distance from bottom */
+  left: 0;
+  width: 100%;
+  text-align: center;
+  pointer-events: none; /* Let clicks pass through */
+
+  /* Font Styling */
+  font-family: 'Trajan Pro', serif; /* Match your theme */
+  font-size: 1rem;
+  letter-spacing: 2px;
+  color: #E71D23; /* The Red Color */
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 1s ease; /* Smooth fade in/out */
+  z-index: 100;
+}
+
+/* Fade Classes controlled by React */
+.cinematic-subtitle.fade-in {
+  opacity: 1;
+}
+
+/* Mobile tweak */
+@media (max-width: 768px) {
+  .cinematic-subtitle {
+    bottom: 2rem;
+    font-size: 0.7rem;
+    padding: 0 20px;
+    line-height: 1.4;
   }
 }
