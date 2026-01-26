@@ -10,7 +10,6 @@
 /* 1. Global fix for the scrollbar */
 html, body {
     overflow-x: hidden; /* Forcibly hide horizontal scrollbar */
-    overflow-y: hidden;
     width: 100%;
     margin: 0;
     padding: 0;

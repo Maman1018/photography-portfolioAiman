@@ -6,6 +6,11 @@ import Shuffle from './component/Shuffle';
 import DustEffect from './component/DustEffect';
 
 function Home() {
+
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+
+
   // 1. Controls if the component is physically in the DOM
   const [mountSubtitle, setMountSubtitle] = useState(false);
 
@@ -34,10 +39,13 @@ function Home() {
       clearTimeout(startTimer);
       clearTimeout(endTimer);
       clearTimeout(cleanupTimer);
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     };
   }, []);
 
   return (
+
     <div className="landing-container">
       <div className="landing-content">
         <h1 className="hero-title">
