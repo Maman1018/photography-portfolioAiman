@@ -11,19 +11,14 @@ const DustEffect = ({
   const [isExploding, setIsExploding] = useState(false);
   const [showText, setShowText] = useState(true);
 
-  // --- PHYSICS CONFIGURATION ---
   const config = {
     particleSize: 2,
     reductionFactor: 2,
-    duration: 5000,       // ~15 seconds (Long lingering)
-
-    // Initial Explosion
-    speed: 1,          // Moderate burst speed
-
-    // The "Float" Feel
-    gravity: -0.03,      // Very tiny upward pull (Anti-gravity)
-    drag: 0.96,          // Friction: slows them down quickly after burst
-    jitter: 0.50         // Air currents: random wiggling while floating
+    duration: 5000,
+    speed: 1,
+    gravity: -0.03,
+    drag: 0.96,
+    jitter: 0.08
   };
 
   useEffect(() => {
@@ -32,20 +27,45 @@ const DustEffect = ({
     }
   }, [isVisible]);
 
+  // --- UPDATED HELPER: Draws text starting from the TOP ---
+  const drawWrappedText = (ctx, text, x, y, maxWidth, lineHeight) => {
+    const words = text.split(' ');
+    let line = '';
+    const lines = [];
+
+    // 1. Calculate lines based on maxWidth
+    for (let i = 0; i < words.length; i++) {
+      const testLine = line + words[i] + ' ';
+      const metrics = ctx.measureText(testLine);
+      const testWidth = metrics.width;
+
+      if (testWidth > maxWidth && i > 0) {
+        lines.push(line);
+        line = words[i] + ' ';
+      } else {
+        line = testLine;
+      }
+    }
+    lines.push(line);
+
+    // 2. Draw lines flowing from Top to Bottom
+    // We removed the vertical centering logic to match HTML flow
+    lines.forEach((l, index) => {
+      ctx.fillText(l.trim(), x, y + (index * lineHeight));
+    });
+  };
+
   const explode = () => {
     setIsExploding(true);
     const container = containerRef.current;
     if (!container) return;
 
-    // Safety check
     const rect = container.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) {
         setShowText(false);
         return;
     }
 
-    // 1. SETUP FULL SCREEN CANVAS (Fixed Position)
-    // This breaks the particles out of the text box so they can cover the screen
     const canvas = canvasRef.current;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -57,28 +77,55 @@ const DustEffect = ({
       width: '100vw',
       height: '100vh',
       pointerEvents: 'none',
-      zIndex: 9999 // Float above everything
+      zIndex: 9999
     });
 
     const ctx = canvas.getContext('2d');
 
-    // 2. DRAW TEXT (Snapshot)
-    // We calculate exactly where the text IS on screen right now
-    const computedStyle = window.getComputedStyle(container.firstChild);
+    // --- CRITICAL FIXES FOR STYLE MATCHING ---
+    const computedStyle = window.getComputedStyle(container.firstChild || container);
+
+    // 1. Font & Color
     ctx.font = `${computedStyle.fontSize} ${computedStyle.fontFamily}`;
     ctx.fillStyle = computedStyle.color;
-    ctx.textBaseline = 'middle';
+
+    // 2. Letter Spacing (Crucial for Trajan Pro)
+    // Canvas defaults to 0px spacing, which breaks wrapping calculations
+    const spacing = computedStyle.letterSpacing;
+    if (spacing && spacing !== 'normal') {
+        ctx.letterSpacing = spacing;
+    }
+
+    // 3. Alignment Strategy
+    // We switch to 'top' baseline to match how HTML renders text blocks
+    ctx.textBaseline = 'top';
     ctx.textAlign = 'center';
 
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+    // 4. Calculate Dimensions
+    // We subtract padding to get the true "content box" for text wrapping
+    const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
+    const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
+    const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
 
-    ctx.fillText(container.innerText, centerX, centerY);
+    const contentWidth = rect.width - paddingLeft - paddingRight;
 
-    // 3. GENERATE PARTICLES
+    // Start X: Center of the content box (since text-align is center)
+    const startX = rect.left + paddingLeft + (contentWidth / 2);
+
+    // Start Y: Top of the content box (plus padding)
+    const startY = rect.top + paddingTop;
+
+    // Calculate Line Height
+    const fontSize = parseFloat(computedStyle.fontSize);
+    let lineHeight = parseFloat(computedStyle.lineHeight);
+    if (isNaN(lineHeight)) lineHeight = fontSize * 1.2;
+
+    // --- DRAW SNAPSHOT ---
+    drawWrappedText(ctx, container.innerText, startX, startY, contentWidth, lineHeight);
+
+    // --- GENERATE PARTICLES ---
     const particles = [];
-    // We only scan the area where the text actually is
-    const buffer = 20;
+    const buffer = 50;
     const scanLeft = Math.floor(Math.max(0, rect.left - buffer));
     const scanTop = Math.floor(Math.max(0, rect.top - buffer));
     const scanWidth = Math.ceil(Math.min(window.innerWidth - scanLeft, rect.width + buffer * 2));
@@ -94,16 +141,11 @@ const DustEffect = ({
 
         if (alpha > 0) {
           particles.push({
-            // Absolute screen position
             x: scanLeft + x,
             y: scanTop + y,
-
-            // Initial burst velocity (Explosion)
-            vx: (Math.random() - 0.5) * config.speed * 40,
-            vy: ((Math.random() - 0.5) * config.speed * 25),
-
-            // Life properties
-            life: Math.random() * (config.duration * 0.8) + (config.duration * 0.8),
+            vx: (Math.random() - 0.5) * config.speed * 50,
+            vy: (Math.random() - 0.5) * config.speed * 30,
+            life: Math.random() * (config.duration * 0.5) + (config.duration * 0.5),
             maxLife: config.duration,
             color: `rgba(${data[index]}, ${data[index+1]}, ${data[index+2]}`
           });
@@ -111,11 +153,9 @@ const DustEffect = ({
       }
     }
 
-    // Clear the snapshot so we see only particles
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     setShowText(false);
 
-    // 4. ANIMATION LOOP
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       let activeParticles = 0;
@@ -123,30 +163,16 @@ const DustEffect = ({
       particles.forEach(p => {
         if (p.life > 0) {
           activeParticles++;
-
-          // --- THE FLOATING PHYSICS ---
-
-          // 1. Apply Jitter (Random Air Currents)
-          // This makes them "wander" instead of flying in straight lines
           p.vx += (Math.random() - 0.5) * config.jitter;
           p.vy += (Math.random() - 0.5) * config.jitter;
-
-          // 2. Apply Drag (Air Resistance)
-          // This slows down the explosion quickly so they start floating
           p.vx *= config.drag;
           p.vy *= config.drag;
-
-          // 3. Apply Gravity (Slow Rise)
           p.vy += config.gravity;
-
-          // 4. Move
           p.x += p.vx;
           p.y += p.vy;
-
           p.life--;
 
-          // 5. Draw
-          const opacity = Math.pow(p.life / p.maxLife, 0.5); // Smooth fade
+          const opacity = Math.pow(p.life / p.maxLife, 0.5);
           ctx.fillStyle = `${p.color}, ${opacity})`;
           ctx.fillRect(p.x, p.y, config.particleSize, config.particleSize);
         }
@@ -166,7 +192,7 @@ const DustEffect = ({
     <div
       ref={containerRef}
       className={className}
-      style={{ position: 'relative', display: 'inline-block' }}
+      style={{ position: 'relative', display: 'inline-block', width: '100%' }}
     >
       <div style={{ opacity: showText ? 1 : 0, transition: 'none' }}>
         {children}
@@ -174,9 +200,7 @@ const DustEffect = ({
 
       <canvas
         ref={canvasRef}
-        style={{
-          opacity: isExploding ? 1 : 0
-        }}
+        style={{ opacity: isExploding ? 1 : 0 }}
       />
     </div>
   );

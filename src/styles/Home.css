@@ -25,7 +25,7 @@ html, body {
   align-items: center;
   background-color: #131313;
   text-align: center;
-  padding-top: 20vh;
+  padding-top: 15vh;
   box-sizing: border-box;
 
   overflow: hidden;
@@ -157,9 +157,10 @@ html, body {
 
 /* Container for the bottom subtitle */
 .cinematic-subtitle {
-  position: absolute;
-  bottom: 3rem; /* Distance from bottom */
-  left: 0;
+  /* NEW LAYOUT STRATEGY */
+  position: relative;  /* Flows naturally with the page */
+  margin-top: 8vh;     /* Adds a flexible gap (8% of screen height) below the menu */
+  padding-bottom: 2rem; /* Safety space at the very bottom */
   width: 100%;
   text-align: center;
   pointer-events: none; /* Let clicks pass through */
