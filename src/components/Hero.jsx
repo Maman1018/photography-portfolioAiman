@@ -45,7 +45,7 @@ const Hero = () => {
     // 3. Side Images: REVEAL (50% to 75%)
     //    They start fading in just as the "Hold" releases.
     const sideOpacity = useTransform(scrollYProgress, [0.5, 0.75], [0, 1]);
-    const sideScale = useTransform(scrollYProgress, [0.5, 0.75], [0.8, 1]);y
+    const sideScale = useTransform(scrollYProgress, [0.5, 0.75], [0.8, 1]);
 
     return (
         // NEW WRAPPER: Replaces 'hero-outer-container' with a tall scrolling area
