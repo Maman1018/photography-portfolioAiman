@@ -3,12 +3,18 @@ import React, { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import './Hero.css';
 
-// Placeholder images for the new side columns
+import imgLeftTop from '../assets/1-Budapest.jpg';
+import imgLeftBottom from '../assets/3.1-Boldogko Castle.jpg';
+import imgRightTop from '../assets/DSC03597.jpg';
+import imgRightBottom from '../assets/DSC03769.jpg';
+import imgHero from '../assets/DSC03755.jpg'; // The main center image
+
+// Use the imported variables in your object
 const galleryImages = {
-    leftTop: "/src/assets/1-Budapest.jpg",
-    leftBottom: "/src/assets/3.1-Boldogko Castle.jpg",
-    rightTop: "/src/assets/DSC03597.jpg",
-    rightBottom: "/src/assets/DSC03769.jpg"
+    leftTop: imgLeftTop,
+    leftBottom: imgLeftBottom,
+    rightTop: imgRightTop,
+    rightBottom: imgRightBottom
 };
 
 const Hero = () => {
@@ -101,7 +107,7 @@ const Hero = () => {
                         <div className="hero-frame-wrapper">
                             <div className="hero-frame">
                                 <div className="hero-overlay"></div>
-                                <img src="/src/assets/DSC03755.jpg" alt="Architecture" className="hero-img" />
+                                <img src={imgHero} alt="Architecture" className="hero-img" />
 
                                 {/* Bottom UI (Fades out via Motion) */}
                                 <div className={`frame-ui-bottom ${scrolled ? 'hidden' : ''}`}>
