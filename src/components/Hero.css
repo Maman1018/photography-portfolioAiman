@@ -1,0 +1,180 @@
+/* src/components/Hero.css */
+
+/* --- LAYOUT BASICS --- */
+.hero-outer-container {
+    width: 100%;
+    height: 100vh;
+    padding: 20px;
+    background-color: #F4F3F2;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.hero-frame-wrapper {
+    width: 100%;
+    height: 100%;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1; /* Behind the navbar */
+}
+
+.hero-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.2); z-index: 1; }
+
+/* --- THE UNIFIED NAVBAR (The Floating Pill) --- */
+.navbar-container {
+    position: fixed;
+    top: 45px; /* Matches your previous alignment inside the frame */
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* STATE 1: Default (Wide & Transparent) */
+    width: calc(100% - 80px); /* Full width minus left/right padding */
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+
+    background: transparent;
+    border-radius: 0;
+    z-index: 100;
+    transition: all 3s cubic-bezier(0.22, 1, 0.5, 1);
+}
+
+/* --- STATE 2: SCROLLED (Shrink to Grey Pill) --- */
+.navbar-container.scrolled {
+    top: 20px; /* Moves slightly up */
+
+    /* The Shrink Effect */
+    width: 60%; /* Adjust this if you want it wider/narrower */
+    background: rgba(40, 40, 40, 0.4); /* Dark Grey semi-transparent */
+    backdrop-filter: blur(50px); /* Nice blur effect */
+    border-radius: 40px; /* Pill shape */
+    padding: 0 30px; /* Add internal padding for the pill */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* --- NAV SLOTS (Left, Center, Right) --- */
+.nav-slot {
+    display: flex;
+    align-items: center;
+}
+
+.nav-slot.center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    /* Ensure name doesn't overlap links during transition */
+    white-space: nowrap;
+}
+
+/* --- BRAND NAME & ICON ANIMATION --- */
+.brand-name {
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.3em;
+    margin: 0;
+    font-weight: 400;
+    text-transform: uppercase;
+    transition: all 0.4s ease;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.camera-icon-box {
+    width: 30px; height: 20px; /* Slightly smaller for the pill */
+    border: 1.5px solid white;
+    border-radius: 4px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) translateY(20px); /* Start hidden below */
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+.camera-lens {
+    width: 8px; height: 8px; border: 1.5px solid white; border-radius: 50%;
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+}
+.camera-flash {
+    width: 2px; height: 2px; background: white; border-radius: 50%;
+    position: absolute; top: 3px; right: 3px;
+}
+
+/* Swap Logic */
+.navbar-container.scrolled .brand-name {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+}
+
+.navbar-container.scrolled .camera-icon-box {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0); /* Moves to center */
+}
+
+
+/* --- MENU & LINKS --- */
+.menu-btn-simple {
+    background: none; border: none; cursor: pointer;
+    display: flex; flex-direction: column; gap: 6px;
+    padding: 0;
+}
+.line { width: 30px; height: 2px; background: white; transition: width 0.3s; }
+
+/* Optional: Make hamburger smaller in pill mode */
+.navbar-container.scrolled .line { width: 20px; }
+
+.frame-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 30px;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: font-size 0.3s;
+}
+
+/* Optional: Make text slightly smaller in pill mode to fit better */
+.navbar-container.scrolled .frame-links a {
+    font-size: 0.75rem;
+    margin-left: 20px;
+}
+
+
+/* --- BOTTOM UI (Unchanged) --- */
+.frame-ui-bottom {
+    position: absolute;
+    bottom: 40px; left: 40px; right: 30px;
+    z-index: 10;
+    color: white;
+}
+.line-separator { width: 100%; height: 1px; background: rgba(255,255,255,0.5); margin-bottom: 20px; }
+.bottom-row { display: flex; justify-content: space-between; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 80%;}
+
+/* 1. THE TIMELINE (Tall Container) */
+.scroll-timeline-container {
+    width: 100%;
+    height: 350vh; /* Very tall to allow for the animation to play out */
+    background-color: #F4F3F2;
+    position: relative;
+}
+
+/* 2. THE VIEWPORT (Sticky Screen) */
+.sticky-viewport {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    padding: 20px; /* The white border frame */
+    box-sizing: border-box;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
