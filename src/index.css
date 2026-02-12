@@ -1,0 +1,17 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+    --bg-color: #F4F3F2;
+    --text-white: #ffffff;
+    --font-main: 'Poppins', sans-serif;
+    --padding-frame: 40px; /* Adjusts how far elements are from the edge */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    font-family: var(--font-main);
+    overflow-x: hidden;
+}
