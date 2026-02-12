@@ -27,11 +27,25 @@ const Hero = () => {
         offset: ["start start", "end end"]
     });
 
-    // Grid Animations
-    const centerWidth = useTransform(scrollYProgress, [0.1, 0.35], ["100%", "40%"]);
-    const sideOpacity = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
-    const sideScale = useTransform(scrollYProgress, [0.2, 0.4], [0.9, 1]);
-    const textOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
+
+
+    // --- ANIMATIONS ---
+
+    // 1. Text Fade: Smooth (0% to 15%)
+    const textOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+
+    // 2. Center Shrink: ABSORB MOMENTUM (0% to 35%)
+    //    We stretch this out so the "heavy" scroll feels like it's working *against* something.
+    const centerWidth = useTransform(scrollYProgress, [0, 0.35], ["100%", "40%"]);
+
+    // --- THE SWEET SPOT HOLD (35% to 50%) ---
+    // This creates a pause of roughly 1 screen height.
+    // It feels deliberate, not empty.
+
+    // 3. Side Images: REVEAL (50% to 75%)
+    //    They start fading in just as the "Hold" releases.
+    const sideOpacity = useTransform(scrollYProgress, [0.5, 0.75], [0, 1]);
+    const sideScale = useTransform(scrollYProgress, [0.5, 0.75], [0.8, 1]);y
 
     return (
         // NEW WRAPPER: Replaces 'hero-outer-container' with a tall scrolling area
