@@ -7,9 +7,8 @@ import imgLeftTop from '../assets/1-Budapest.jpg';
 import imgLeftBottom from '../assets/3.1-Boldogko Castle.jpg';
 import imgRightTop from '../assets/DSC03597.jpg';
 import imgRightBottom from '../assets/DSC03769.jpg';
-import imgHero from '../assets/DSC03755.jpg'; // The main center image
+import imgHero from '../assets/DSC03755.jpg';
 
-// Use the imported variables in your object
 const galleryImages = {
     leftTop: imgLeftTop,
     leftBottom: imgLeftBottom,
@@ -18,7 +17,7 @@ const galleryImages = {
 };
 
 const Hero = () => {
-    // --- 1. KEEPING YOUR STABLE NAVBAR LOGIC ---
+    // Navbar Logic
     const [scrolled, setScrolled] = useState(false);
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -26,44 +25,39 @@ const Hero = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // --- 2. NEW SCROLL LOGIC (Only for the Grid, not the Navbar) ---
+    // Scroll Logic
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start start", "end end"]
     });
 
+    // --- ANIMATION TIMELINE (Native Scroll Optimized) ---
 
+    // 1. Shrink (0% -> 30%)
+    //    Happens in the first screen of scrolling.
+    const centerWidth = useTransform(scrollYProgress, [0, 0.3], ["100%", "40%"]);
 
-    // --- ANIMATIONS ---
+    // 2. The Hold (30% -> 60%)
+    //    We intentionally put NO animation triggers here.
+    //    The user scrolls, the image stays pinned at 40% width.
+    //    This creates the "Stop" you are looking for.
 
-    // 1. Text Fade: Smooth (0% to 15%)
-    const textOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+    // 3. Sides Enter (60% -> 90%)
+    //    They slide up ONLY after we have waited.
+    //    We use a large Y value (100vh) to mimic the "Heavy Assembly" feel.
+    const sideY = useTransform(scrollYProgress, [0.4, 0.6], ["100vh", "0px"]);
+    const sideOpacity = useTransform(scrollYProgress, [0.3, 0.6], [0, 1]); // Fade in quickly at start of move
+    const sideScale = useTransform(scrollYProgress, [0.3, 0.6], [0.9, 1]);
 
-    // 2. Center Shrink: ABSORB MOMENTUM (0% to 35%)
-    //    We stretch this out so the "heavy" scroll feels like it's working *against* something.
-    const centerWidth = useTransform(scrollYProgress, [0, 0.35], ["100%", "40%"]);
-
-    // --- THE SWEET SPOT HOLD (35% to 50%) ---
-    // This creates a pause of roughly 1 screen height.
-    // It feels deliberate, not empty.
-
-    // 3. Side Images: REVEAL (50% to 75%)
-    //    They start fading in just as the "Hold" releases.
-    const sideOpacity = useTransform(scrollYProgress, [0.5, 0.75], [0, 1]);
-    const sideScale = useTransform(scrollYProgress, [0.5, 0.75], [0.8, 1]);
+    // UI Fade
+    const textOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
 
     return (
-        // NEW WRAPPER: Replaces 'hero-outer-container' with a tall scrolling area
         <div ref={containerRef} className="scroll-timeline-container">
-
-            {/* STICKY VIEWPORT: Holds the screen still while you scroll */}
             <div className="sticky-viewport">
 
-                {/* --- STABLE NAVBAR ---
-                   This is your exact code. It sits outside the grid
-                   so it is never affected by flexbox/grid layout changes.
-                */}
+                {/* Navbar */}
                 <div className={`navbar-container ${scrolled ? 'scrolled' : ''}`}>
                     <div className="nav-slot left">
                         <button className="menu-btn-simple">
@@ -84,32 +78,28 @@ const Hero = () => {
                     </div>
                 </div>
 
-                {/* --- NEW GRID LAYOUT --- */}
+                {/* Gallery Grid */}
                 <div className="gallery-grid">
 
-                    {/* LEFT COLUMN */}
+                    {/* Left Column */}
                     <motion.div
                         className="grid-col side-col"
-                        style={{ opacity: sideOpacity, scale: sideScale }}
+                        style={{ opacity: sideOpacity, scale: sideScale, y: sideY }}
                     >
                         <div className="grid-item"><img src={galleryImages.leftTop} alt="" /></div>
                         <div className="grid-item"><img src={galleryImages.leftBottom} alt="" /></div>
                     </motion.div>
 
-                    {/* CENTER COLUMN (Holds your original Image Frame) */}
+                    {/* Center Column */}
                     <motion.div
                         className="grid-col center-col"
                         style={{ width: centerWidth }}
                     >
-                        {/* --- YOUR ORIGINAL IMAGE CODE ---
-                           I pasted your 'hero-frame-wrapper' logic here.
-                        */}
                         <div className="hero-frame-wrapper">
                             <div className="hero-frame">
                                 <div className="hero-overlay"></div>
-                                <img src={imgHero} alt="Architecture" className="hero-img" />
+                                <img src={imgHero} alt="Architecture" className="hero-img" decoding="sync" loading="eager" />
 
-                                {/* Bottom UI (Fades out via Motion) */}
                                 <div className={`frame-ui-bottom ${scrolled ? 'hidden' : ''}`}>
                                     <div className="line-separator"></div>
                                     <div className="bottom-row">
@@ -121,10 +111,10 @@ const Hero = () => {
                         </div>
                     </motion.div>
 
-                    {/* RIGHT COLUMN */}
+                    {/* Right Column */}
                     <motion.div
                         className="grid-col side-col"
-                        style={{ opacity: sideOpacity, scale: sideScale }}
+                        style={{ opacity: sideOpacity, scale: sideScale, y: sideY }}
                     >
                         <div className="grid-item"><img src={galleryImages.rightTop} alt="" /></div>
                         <div className="grid-item"><img src={galleryImages.rightBottom} alt="" /></div>

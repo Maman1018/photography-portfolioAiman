@@ -1,23 +1,21 @@
 // src/components/SmoothScroll.jsx
 import { useEffect } from 'react';
 import Lenis from 'lenis';
-import 'lenis/dist/lenis.css'; // Optional: Basic CSS reset for Lenis
+import 'lenis/dist/lenis.css';
 
 const SmoothScroll = ({ children }) => {
     useEffect(() => {
-        // 1. Initialize Lenis
         const lenis = new Lenis({
-            duration: 1.2, // The higher the value, the "heavier" the scroll feels (Default is 1.0)
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Luxurious easing
+            duration: 1.2, // Heavy weight
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             direction: 'vertical',
             gestureDirection: 'vertical',
             smooth: true,
-            mouseMultiplier: 1, // How sensitive the mouse wheel is
-            smoothTouch: false, // Mobile usually feels better with native scroll
+            mouseMultiplier: 0.7,
+            smoothTouch: false,
             touchMultiplier: 2,
         });
 
-        // 2. Connect to the Animation Loop
         function raf(time) {
             lenis.raf(time);
             requestAnimationFrame(raf);
@@ -25,15 +23,15 @@ const SmoothScroll = ({ children }) => {
 
         requestAnimationFrame(raf);
 
-        // Cleanup
         return () => {
             lenis.destroy();
         };
     }, []);
 
     return (
-        // The content inside still behaves normally, just scrolled differently
-        <div style={{ width: '100%', overflow: 'hidden' }}>
+        // FIX: Removed "overflow: hidden".
+        // Now "position: sticky" inside Hero.jsx will work correctly relative to the window.
+        <div style={{ width: '100%' }}>
             {children}
         </div>
     );

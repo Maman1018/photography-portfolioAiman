@@ -35,21 +35,33 @@
 
 .hero-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.2); z-index: 1; }
 
-/* NAVBAR */
+/* src/components/Hero.css - REPLACE YOUR EXISTING .navbar-container BLOCK */
+
 .navbar-container {
     position: fixed;
     top: 45px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateZ(0); /* Added translateZ for GPU */
+
     width: calc(100% - 80px);
     height: 60px;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0;
+
     background: transparent;
-    z-index: 100; /* Keeps it on top of everything */
-    transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1); /* Restored smooth snap */
+    z-index: 100;
+
+    /* OPTIMIZED TRANSITION */
+    /* We list only the properties that change. This is much faster than 'all'. */
+    will-change: width, top, background-color, backdrop-filter;
+    transition:
+            width 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+            top 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+            background-color 0.6s ease,
+            backdrop-filter 0.6s ease;
 }
 
 .navbar-container.scrolled {
@@ -186,3 +198,29 @@
     transition: transform 0.5s ease;
 }
 .grid-item:hover img { transform: scale(1.05); }
+
+/* src/components/Hero.css - PASTE AT THE BOTTOM */
+
+/* --- PERFORMANCE OPTIMIZATION (THE LAG FIX) --- */
+
+/* 1. Optimize Center Column */
+/* Prepares the width change so it doesn't calculate on-the-fly */
+.grid-col.center-col {
+    will-change: width;
+    transform: translateZ(0); /* Forces GPU Acceleration */
+}
+
+/* 2. Optimize Side Columns */
+/* Prepares them for the slide-up animation */
+.grid-col.side-col {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+}
+
+/* 3. Optimize Images */
+/* Prevents images from decoding/repainting during the scroll */
+.grid-item img,
+.hero-img {
+    will-change: transform;
+    backface-visibility: hidden;
+}
