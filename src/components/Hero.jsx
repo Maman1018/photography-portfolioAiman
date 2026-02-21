@@ -3,6 +3,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import './Hero.css';
 
+// --- YOUR COMPONENTS ---
+import DomeGallery from '../reactBits/DomeGallery';
+
+// --- YOUR IMAGES ---
 import imgLeftTop from '../assets/1-Budapest.jpg';
 import imgLeftBottom from '../assets/3.1-Boldogko Castle.jpg';
 import imgRightTop from '../assets/DSC03597.jpg';
@@ -16,8 +20,10 @@ const galleryImages = {
     rightBottom: imgRightBottom
 };
 
+// We put the same images in an array to pass into the Dome!
+const domeImagesList = [imgHero, imgLeftTop, imgLeftBottom, imgRightTop, imgRightBottom];
+
 const Hero = () => {
-    // Navbar Logic
     const [scrolled, setScrolled] = useState(false);
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -25,33 +31,44 @@ const Hero = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Scroll Logic
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start start", "end end"]
     });
 
-    // --- ANIMATION TIMELINE (Native Scroll Optimized) ---
-
-    // 1. Shrink (0% -> 30%)
-    //    Happens in the first screen of scrolling.
+    // --- PHASE 1: THE ASSEMBLE (0% -> 60%) ---
     const centerWidth = useTransform(scrollYProgress, [0, 0.3], ["100%", "40%"]);
-
-    // 2. The Hold (30% -> 60%)
-    //    We intentionally put NO animation triggers here.
-    //    The user scrolls, the image stays pinned at 40% width.
-    //    This creates the "Stop" you are looking for.
-
-    // 3. Sides Enter (60% -> 90%)
-    //    They slide up ONLY after we have waited.
-    //    We use a large Y value (100vh) to mimic the "Heavy Assembly" feel.
     const sideY = useTransform(scrollYProgress, [0.4, 0.6], ["100vh", "0px"]);
-    const sideOpacity = useTransform(scrollYProgress, [0.3, 0.6], [0, 1]); // Fade in quickly at start of move
-    const sideScale = useTransform(scrollYProgress, [0.3, 0.6], [0.9, 1]);
-
-    // UI Fade
+    const sideOpacity = useTransform(scrollYProgress, [0.3, 0.6], [0, 1]);
+    const sideScale = useTransform(scrollYProgress, [0.3, 0.6], [0.5, 1]);
     const textOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
+
+    // --- PHASE 2: THE MUSEUM VOID (65% -> 85%) ---
+
+    // 1. Grid gently pushes backward (shrinks)
+    const gridScale = useTransform(scrollYProgress, [0.65, 0.72], [1, 0.8]);
+
+    // 2. The side columns drift outward gracefully and slowly
+    const leftFlyX = useTransform(scrollYProgress, [0.65, 0.72], ["0vw", "-20vw"]);
+    const rightFlyX = useTransform(scrollYProgress, [0.65, 0.72], ["0vw", "20vw"]);
+
+    // 3. Grid fades out QUICKLY.
+    const gridOpacity = useTransform(scrollYProgress, [0.65, 0.72], [1, 0]);
+    const gridPointer = useTransform(scrollYProgress, [0.65, 0.66], ["auto", "none"]);
+
+    // --- THE KILL SWITCH ---
+    // The millisecond opacity hits 0, we force the browser to completely hide the elements.
+    // This stops the Dome from accidentally reflecting the invisible images.
+    const gridVisibility = useTransform(scrollYProgress, [0.7, 0.85], ["visible", "hidden"]);
+
+    // --- THE VOID ---
+    // Gap from 0.72 to 0.78 where the screen is perfectly clean.
+
+    // 4. Dome enters: Fades in elegantly from the empty space
+    const domeScale = useTransform(scrollYProgress, [0.78, 0.85], [1.1, 1]);
+    const domeOpacity = useTransform(scrollYProgress, [0.78, 0.85], [0, 1]);
+    const domePointer = useTransform(scrollYProgress, [0.84, 0.85], ["none", "auto"]);
 
     return (
         <div ref={containerRef} className="scroll-timeline-container">
@@ -78,49 +95,73 @@ const Hero = () => {
                     </div>
                 </div>
 
-                {/* Gallery Grid */}
-                <div className="gallery-grid">
+                {/* LAYER 1: The Original Hero Grid */}
+                <motion.div
+                    style={{
+                        opacity: gridOpacity,
+                        visibility: gridVisibility, // <--- APPLIED HERE
+                        scale: gridScale,
+                        pointerEvents: gridPointer,
+                        position: 'absolute', inset: '20px',
+                        display: 'flex', justifyContent: 'center', alignItems: 'center'
+                    }}
+                >
+                    <div className="gallery-grid">
+                        {/* LEFT COLUMN */}
+                        <motion.div
+                            className="grid-col side-col"
+                            style={{ opacity: sideOpacity, scale: sideScale, y: sideY, x: leftFlyX }}
+                        >
+                            <div className="grid-item"><img src={galleryImages.leftTop} alt="" decoding="sync" loading="eager" /></div>
+                            <div className="grid-item"><img src={galleryImages.leftBottom} alt="" decoding="sync" loading="eager" /></div>
+                        </motion.div>
 
-                    {/* Left Column */}
-                    <motion.div
-                        className="grid-col side-col"
-                        style={{ opacity: sideOpacity, scale: sideScale, y: sideY }}
-                    >
-                        <div className="grid-item"><img src={galleryImages.leftTop} alt="" /></div>
-                        <div className="grid-item"><img src={galleryImages.leftBottom} alt="" /></div>
-                    </motion.div>
-
-                    {/* Center Column */}
-                    <motion.div
-                        className="grid-col center-col"
-                        style={{ width: centerWidth }}
-                    >
-                        <div className="hero-frame-wrapper">
-                            <div className="hero-frame">
-                                <div className="hero-overlay"></div>
-                                <img src={imgHero} alt="Architecture" className="hero-img" decoding="sync" loading="eager" />
-
-                                <div className={`frame-ui-bottom ${scrolled ? 'hidden' : ''}`}>
-                                    <div className="line-separator"></div>
-                                    <div className="bottom-row">
-                                        <span className="arrow-down">↓</span>
-                                        <span className="scroll-label">Scroll down</span>
+                        {/* CENTER COLUMN */}
+                        <motion.div className="grid-col center-col" style={{ width: centerWidth }}>
+                            <div className="hero-frame-wrapper">
+                                <div className="hero-frame">
+                                    <div className="hero-overlay"></div>
+                                    <img src={imgHero} alt="Architecture" className="hero-img" decoding="sync" loading="eager" />
+                                    <div className={`frame-ui-bottom ${scrolled ? 'hidden' : ''}`}>
+                                        <div className="line-separator"></div>
+                                        <div className="bottom-row">
+                                            <span className="arrow-down">↓</span>
+                                            <span className="scroll-label">Scroll down</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
 
-                    {/* Right Column */}
-                    <motion.div
-                        className="grid-col side-col"
-                        style={{ opacity: sideOpacity, scale: sideScale, y: sideY }}
-                    >
-                        <div className="grid-item"><img src={galleryImages.rightTop} alt="" /></div>
-                        <div className="grid-item"><img src={galleryImages.rightBottom} alt="" /></div>
-                    </motion.div>
+                        {/* RIGHT COLUMN */}
+                        <motion.div
+                            className="grid-col side-col"
+                            style={{ opacity: sideOpacity, scale: sideScale, y: sideY, x: rightFlyX }}
+                        >
+                            <div className="grid-item"><img src={galleryImages.rightTop} alt="" decoding="sync" loading="eager"/></div>
+                            <div className="grid-item"><img src={galleryImages.rightBottom} alt="" decoding="sync" loading="eager"/></div>
+                        </motion.div>
+                    </div>
+                </motion.div>
 
-                </div>
+                {/* LAYER 2: The Dome Gallery */}
+                <motion.div
+                    style={{
+                        opacity: domeOpacity,
+                        scale: domeScale,
+                        pointerEvents: domePointer,
+                        position: 'absolute', inset: 0,
+                        zIndex: 10,
+                        display: 'flex', justifyContent: 'center', alignItems: 'center'
+                    }}
+                >
+                    <DomeGallery
+                        images={domeImagesList}
+                        overlayBlurColor="#F4F3F2"
+                        grayscale={false}
+                    />
+                </motion.div>
+
             </div>
         </div>
     );

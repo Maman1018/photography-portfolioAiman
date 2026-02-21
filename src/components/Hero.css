@@ -136,7 +136,7 @@
 /* The Main Scroll Container (Replaces hero-outer-container) */
 .scroll-timeline-container {
     width: 100%;
-    height: 450vh; /* TALL height for scrolling */
+    height: 800vh; /* TALL height for scrolling */
     background-color: #F4F3F2;
     position: relative;
 }
@@ -148,16 +148,11 @@
     width: 100%;
     height: 100vh;
     overflow: hidden;
-    padding: 20px; /* The white border around the whole grid */
+    padding: 20px;
     box-sizing: border-box;
-
-    /* Center the grid content */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /* We remove flex from here because we are stacking absolute layers inside now */
 }
 
-/* The Grid System */
 .gallery-grid {
     width: 100%;
     height: 100%;
@@ -166,7 +161,7 @@
     align-items: center;
     gap: 20px;
     position: relative;
-    /* No z-index defined -> sits below navbar naturally */
+    /* Removed the 3D perspective rules */
 }
 
 /* Center Column (Where your Image lives) */
