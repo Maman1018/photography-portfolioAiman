@@ -1,19 +1,19 @@
 // src/App.jsx
+import SmoothScroll from './components/SmoothScroll';
 import Hero from './components/Hero';
+import Statement from './components/Statement'; // <--- Importing the new section
 
 function App() {
     return (
-        <div className="app-container">
-            {/* The New Figma Design Hero */}
-            <Hero />
+        <SmoothScroll>
+            <div className="app-container">
+                {/* Section 1: The 1200vh Scroll Experience & Dome */}
+                <Hero />
 
-            {/* Placeholder for next sections so you can scroll to test animation */}
-            <div style={{height: '100vh', background: '#F4F3F2', padding: '100px 40px'}}>
-                <h2 style={{fontSize: '3rem', color: '#333'}}>
-                    The story continues here...
-                </h2>
+                {/* Section 2: The Still Typography Pause */}
+                <Statement />
             </div>
-        </div>
+        </SmoothScroll>
     );
 }
 

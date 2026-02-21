@@ -1,0 +1,47 @@
+/* src/components/Statement.css */
+
+.statement-section {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #F4F3F2; /* Matches your Hero void perfectly */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden; /* Prevents horizontal scroll if the big text is too wide */
+    padding: 100px 0;
+    box-sizing: border-box;
+    z-index: 20; /* Ensures it sits neatly below your Hero section */
+}
+
+/* The Top Text */
+.statement-small {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    color: #1a1a1a;
+    font-weight: 400;
+    line-height: 1.15; /* Very tight line-height like the reference */
+    letter-spacing: -0.02em;
+    text-align: center;
+    margin: 0 0 10vh 0; /* Pushes the giant text down */
+}
+
+/* Forces each word onto its own line */
+.statement-small span {
+    display: block;
+}
+
+/* The Giant Bottom Text */
+.statement-big {
+    font-family: 'Poppins', sans-serif;
+    /* '22vw' means it scales infinitely with the screen width to stay massive */
+    font-size: clamp(6rem, 22vw, 30rem);
+    color: #1a1a1a;
+    font-weight: 500;
+    line-height: 0.8; /* Cuts off the top/bottom spacing of the font */
+    letter-spacing: 0.01em; /* Extremely tight letters for that modern bold look */
+    text-align: center;
+    white-space: nowrap; /* Forces it to stay on one line */
+    margin: 0;
+}
