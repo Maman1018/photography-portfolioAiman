@@ -2,46 +2,46 @@
 
 .statement-section {
     width: 100%;
-    min-height: 100vh;
-    background-color: #F4F3F2; /* Matches your Hero void perfectly */
+    min-height: 120vh;
+    background-color: #F4F3F2;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     position: relative;
-    overflow: hidden; /* Prevents horizontal scroll if the big text is too wide */
-    padding: 100px 0;
+    overflow: hidden;
+
+    /* FIX 1: Reduced from 25vh to 5vh to remove the huge white gap */
+    padding-top: 10vh;
+    padding-bottom: 5vh;
+
     box-sizing: border-box;
-    z-index: 20; /* Ensures it sits neatly below your Hero section */
+    z-index: 20;
 }
 
-/* The Top Text */
 .statement-small {
     font-family: 'Poppins', sans-serif;
     font-size: clamp(2rem, 4vw, 3.5rem);
     color: #1a1a1a;
     font-weight: 400;
-    line-height: 1.15; /* Very tight line-height like the reference */
+    line-height: 1.1;
     letter-spacing: -0.02em;
     text-align: center;
-    margin: 0 0 10vh 0; /* Pushes the giant text down */
+    margin: 0 0 10vh 0;
 }
 
-/* Forces each word onto its own line */
 .statement-small span {
     display: block;
 }
 
-/* The Giant Bottom Text */
 .statement-big {
     font-family: 'Poppins', sans-serif;
-    /* '22vw' means it scales infinitely with the screen width to stay massive */
     font-size: clamp(6rem, 22vw, 30rem);
     color: #1a1a1a;
     font-weight: 500;
-    line-height: 0.8; /* Cuts off the top/bottom spacing of the font */
-    letter-spacing: 0.01em; /* Extremely tight letters for that modern bold look */
+    line-height: 0.8;
+    letter-spacing: -0.05em;
     text-align: center;
-    white-space: nowrap; /* Forces it to stay on one line */
+    white-space: nowrap;
     margin: 0;
 }

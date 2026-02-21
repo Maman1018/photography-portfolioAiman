@@ -1,17 +1,20 @@
 // src/App.jsx
 import SmoothScroll from './components/SmoothScroll';
 import Hero from './components/Hero';
-import Statement from './components/Statement'; // <--- Importing the new section
+import Statement from './components/Statement';
+import Genres from './components/Genres';
+import Footer from './components/Footer'; // Import Footer
 
 function App() {
     return (
         <SmoothScroll>
             <div className="app-container">
-                {/* Section 1: The 1200vh Scroll Experience & Dome */}
                 <Hero />
-
-                {/* Section 2: The Still Typography Pause */}
                 <Statement />
+                <Genres />
+
+                {/* Final Section */}
+                <Footer />
             </div>
         </SmoothScroll>
     );

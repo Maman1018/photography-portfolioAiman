@@ -54,15 +54,15 @@ const Hero = () => {
 
     // --- THE KILL SWITCH ---
     // Triggers instantly at 0.48 when opacity hits 0
-    const gridVisibility = useTransform(scrollYProgress, [0.48, 0.49], ["visible", "hidden"]);
+    const gridVisibility = useTransform(scrollYProgress, [0.55, 0.6], ["visible", "hidden"]);
 
     // --- DOME ENTERS ---
     // Dome finishes loading at 0.58 (58% of the way down).
     // This leaves from 0.58 to 1.0 (about 5 full mouse wheel scrolls) purely for exploring the Dome!
-    const domeScale = useTransform(scrollYProgress, [0.49, 0.58], [1.1, 1]);
-    const domePointer = useTransform(scrollYProgress, [0.49, 0.58], ["none", "auto"]);
+    const domeScale = useTransform(scrollYProgress, [0.48, 0.58], [1.1, 1]);
+    const domePointer = useTransform(scrollYProgress, [0.48, 0.58], ["none", "auto"]);
 
-    const curtainOpacity = useTransform(scrollYProgress, [0.49, 0.58], [1, 0]);
+    const curtainOpacity = useTransform(scrollYProgress, [0.48, 0.58], [1, 0]);
 
     const instructionsOpacity = useTransform(scrollYProgress, [0.49, 0.58], [0, 1]);
 
