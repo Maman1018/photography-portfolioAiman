@@ -1,6 +1,7 @@
 // src/components/Hero.jsx
 import React, { useEffect, useState, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, LayoutGroup } from 'framer-motion';
+import { Link } from 'react-router-dom'; // <--- ADD THIS IMPORT
 import './Hero.css';
 
 // --- YOUR COMPONENTS ---
@@ -67,25 +68,31 @@ const Hero = () => {
     const instructionsOpacity = useTransform(scrollYProgress, [0.49, 0.58], [0, 1]);
 
     return (
-        <> {/* <--- ADD THIS FRAGMENT WRAPPER */}
+        <>
 
-            {/* THE NAVBAR: Now moved completely outside of the scroll containers! */}
+            {/* THE NAVBAR */}
             <div className={`navbar-container ${scrolled ? 'scrolled' : ''}`}>
-                <div className="nav-slot left">
-                    <button className="menu-btn-simple">
-                        <div className="line"></div><div className="line"></div>
-                    </button>
+
+                {/* 1. THE CAMERA ICON */}
+                <div className="camera-icon-box nav-anim-item nav-camera">
+                    <div className="camera-lens"></div><div className="camera-flash"></div>
                 </div>
-                <div className="nav-slot center">
-                    <h1 className="brand-name">AIMAN IZZAT</h1>
-                    <div className="camera-icon-box">
-                        <div className="camera-lens"></div><div className="camera-flash"></div>
-                    </div>
-                </div>
-                <div className="nav-slot right">
+
+                {/* 2. BRAND NAME: FULL */}
+                <h1 className="brand-name nav-anim-item nav-brand-full">
+                    AIMAN IZZAT
+                </h1>
+
+                {/* 3. BRAND NAME: AI */}
+                <h1 className="brand-name nav-anim-item nav-brand-short">
+                    AI
+                </h1>
+
+                {/* 4. RIGHT SLOT: Links */}
+                <div className="nav-slot right" style={{ marginLeft: 'auto', zIndex: 10 }}>
                     <nav className="frame-links">
                         <a href="#designs">Design</a>
-                        <a href="#photography">Photography</a>
+                        <Link to="/photography">Photography</Link>
                     </nav>
                 </div>
             </div>

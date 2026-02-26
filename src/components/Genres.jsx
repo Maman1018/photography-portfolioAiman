@@ -1,5 +1,6 @@
 // src/components/Genres.jsx
 import React from 'react';
+import { Link } from 'react-router-dom'; // <--- IMPORT THIS
 import './Genres.css';
 
 const genresData = [
@@ -15,7 +16,7 @@ const genresData = [
     },
     {
         id: 3,
-        title: 'Sport',
+        title: 'Sports', // <--- FIX: Changed from "Sport" to "Sports" to match your gallery!
         img: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=2070&auto=format&fit=crop'
     }
 ];
@@ -25,23 +26,27 @@ const Genres = () => {
         <section className="genres-section" id="photography">
             <div className="genres-container">
                 {genresData.map((genre, index) => (
-                    <div
+                    /* THE FIX: Changed div to Link and added the "state" prop */
+                    <Link
+                        to="/photography"
+                        state={{ filterCategory: genre.title }}
                         className="genre-card-wrapper"
                         key={genre.id}
-                        /* Tighter stacking offset: 15vh, then 15vh+30px, then 15vh+60px */
-                        style={{ top: `calc(15vh + ${index * 30}px)` }}
+                        style={{
+                            top: `calc(15vh + ${index * 30}px)`,
+                            textDecoration: 'none' /* Prevents underline on the text */
+                        }}
                     >
                         <div className="genre-card">
                             <img src={genre.img} alt={genre.title} className="genre-img" />
                             <div className="genre-overlay">
-                                {/* NEW: Wrapper to hold the title and the button text side-by-side */}
                                 <div className="genre-title-wrapper">
                                     <h2 className="genre-title">{genre.title}</h2>
                                     <span className="genre-explore">Explore Work &rarr;</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </section>

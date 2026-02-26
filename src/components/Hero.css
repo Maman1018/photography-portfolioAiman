@@ -35,65 +35,169 @@
 
 .hero-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.2); z-index: 1; }
 
-/* src/components/Hero.css - REPLACE YOUR EXISTING .navbar-container BLOCK */
-
+/* 1. THE SHRINKING PILL (Restored Structure!) */
 .navbar-container {
+    --nav-pad: 60px;
     position: fixed;
-    top: 45px;
+    top: 0;
     left: 50%;
-    transform: translateX(-50%) translateZ(0); /* Added translateZ for GPU */
-
-    width: calc(100% - 80px);
-    height: 60px;
-
+    transform: translateX(-50%);
+    width: 100%;
+    height: 120px;
+    padding: 0 var(--nav-pad);
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0;
-
-    background: transparent;
     z-index: 100;
+    box-sizing: border-box;
+    background: transparent;
 
-    /* OPTIMIZED TRANSITION */
-    /* We list only the properties that change. This is much faster than 'all'. */
-    will-change: width, top, background-color, backdrop-filter;
-    transition:
-            width 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-            top 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-            background-color 0.6s ease,
-            backdrop-filter 0.6s ease;
+    transition: height 0.4s ease, width 0.4s ease, top 0.4s ease, border-radius 0.4s ease, background 0.4s ease, border 0.4s ease;
 }
 
 .navbar-container.scrolled {
-    top: 20px;
+    --nav-pad: 40px; /* FIX 1: This forces Framer Motion to balance the left and right spacing perfectly! */
+    height: 60px;
     width: 60%;
-    background: rgba(40, 40, 40, 0.4);
-    backdrop-filter: blur(50px);
+    max-width: 90%;
+    top: 20px;
     border-radius: 40px;
-    padding: 0 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 0 var(--nav-pad);
+
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.nav-slot { display: flex; align-items: center; }
-.nav-slot.center { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; }
-
-/* BRAND & ICONS */
-.brand-name {
-    color: white; font-family: 'Poppins', sans-serif; font-size: 1.5rem; letter-spacing: 0.3em;
-    margin: 0; font-weight: 400; text-transform: uppercase; transition: all 0.4s ease;
-    opacity: 1; transform: translateY(0);
+/* 2. NATIVE CSS ANIMATIONS */
+.nav-anim-item {
+    position: absolute;
+    top: 50%;
+    /* FIX: Deleted "margin: 0;" from here so the camera keeps its -3px top margin! */
+    z-index: 10;
+    transition: all 0.4s ease;
 }
+
+/* Camera Icon Sliding */
+.nav-camera {
+    left: var(--nav-pad);
+    transform: translateY(-50%) translateX(0);
+}
+.navbar-container.scrolled .nav-camera {
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+}
+
+/* Full Name Sliding */
+.nav-brand-full {
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    opacity: 1;
+    pointer-events: auto;
+}
+.navbar-container.scrolled .nav-brand-full {
+    left: var(--nav-pad);
+    transform: translateY(-50%) translateX(0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Short Name "AI" Sliding */
+.nav-brand-short {
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    opacity: 0;
+    pointer-events: none;
+}
+.navbar-container.scrolled .nav-brand-short {
+    left: var(--nav-pad);
+    transform: translateY(-50%) translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Mobile check */
+@media (max-width: 768px) {
+    .navbar-container { --nav-pad: 20px; }
+    .navbar-container.scrolled { --nav-pad: 20px; }
+}
+
 .camera-icon-box {
-    width: 30px; height: 20px; border: 1.5px solid white; border-radius: 4px;
-    position: absolute; left: 50%; top: 50%;
-    transform: translate(-50%, -50%) translateY(20px); opacity: 0; transition: all 0.4s ease;
-}
-.camera-lens { width: 8px; height: 8px; border: 1.5px solid white; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-.camera-flash { width: 2px; height: 2px; background: white; border-radius: 50%; position: absolute; top: 3px; right: 3px; }
+    width: 45px;
+    height: 30px;
+    border: 2.5px solid #fff;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: -3px; /* Keeps your optical alignment mathematically perfect! */
 
-/* Logic for swap */
-.navbar-container.scrolled .brand-name { opacity: 0; transform: translateY(-20px); pointer-events: none; }
-.navbar-container.scrolled .camera-icon-box { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+    /* FIX: Deleted 'position: relative;' so it accurately obeys the container! */
+    /* FIX: Deleted 'transition: border-color...' so the slide animation works! */
+}
+
+
+.camera-lens {
+    width: 14px;
+    height: 14px;
+    border: 2.5px solid #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: border-color 0.4s ease;
+    box-sizing: border-box;
+}
+
+.camera-flash {
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    transition: background 0.4s ease;
+}
+
+/* FIX 2: Added Flexbox slots back to maintain perfect structure */
+.nav-slot {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.nav-slot.left { justify-content: flex-start; }
+.nav-slot.center { justify-content: center; }
+.nav-slot.right { justify-content: flex-end; }
+
+/* FIX 3: Restored your original font properties! */
+.brand-name {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: #fff;
+    margin: 0;
+    line-height: 1;
+    /* FIX: Deleted 'transition: color...' so the physical slide animation is allowed to work! */
+}
+
+
+
+
+@media (max-width: 768px) {
+    .navbar-container {
+        --nav-pad: 20px; /* Adapts for mobile */
+        padding: 30px var(--nav-pad);
+    }
+}
+
+.navbar-container.scrolled .camera-icon-box { border-color: #F4F3F2; margin-top: 1px; }
+.navbar-container.scrolled .camera-lens { border-color: #F4F3F2;  }
+.navbar-container.scrolled .camera-flash { background: #F4F3F2;}
+.navbar-container.scrolled .brand-name { color: #F4F3F2; }
+
+
+
 
 /* BUTTONS */
 .menu-btn-simple { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; gap: 6px; padding: 0; }
@@ -136,7 +240,7 @@
 /* The Main Scroll Container (Replaces hero-outer-container) */
 .scroll-timeline-container {
     width: 100%;
-    height: 1000vh; /* TALL height for scrolling */
+    height: 800vh; /* TALL height for scrolling */
     background-color: #F4F3F2;
     position: relative;
 }
