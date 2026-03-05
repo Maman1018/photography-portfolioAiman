@@ -1,32 +1,53 @@
 // src/components/Genres.jsx
-import React from 'react';
-import { Link } from 'react-router-dom'; // <--- IMPORT THIS
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { client, optimizeImg } from '../contentfulClient';
 import './Genres.css';
 
-const genresData = [
-    {
-        id: 1,
-        title: 'Travel',
-        img: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop'
-    },
-    {
-        id: 2,
-        title: 'Graduation',
-        img: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop'
-    },
-    {
-        id: 3,
-        title: 'Sports', // <--- FIX: Changed from "Sport" to "Sports" to match your gallery!
-        img: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=2070&auto=format&fit=crop'
-    }
-];
-
 const Genres = () => {
+    const [genresData, setGenresData] = useState([]);
+
+    useEffect(() => {
+        // Fetch all photos (Change 'portfolioPhoto' to your Content Type ID if needed!)
+        client.getEntries({ content_type: 'photo' })
+            .then(response => {
+                const allPhotos = response.items;
+                const extractedGenres = [];
+                const seenCategories = new Set();
+
+                allPhotos.forEach(item => {
+                    const cat = item.fields.category;
+                    const imgData = item.fields.image;
+
+                    // 🚨 THE FIX: Open the array
+                    const actualImg = Array.isArray(imgData) ? imgData[0] : imgData;
+                    const imgUrl = actualImg?.fields?.file?.url;
+
+                    if (cat && imgUrl && !seenCategories.has(cat)) {
+                        seenCategories.add(cat);
+                        extractedGenres.push({
+                            id: item.sys.id,
+                            title: cat,
+                            // Fetch an optimized 1200px image for the crisp background cover
+                            img: optimizeImg(imgUrl, 1200)
+                        });
+                    }
+                });
+
+                setGenresData(extractedGenres);
+            })
+            .catch(err => console.error("Error fetching genres:", err));
+    }, []);
+
+    // While loading, just render an empty section to maintain page layout
+    if (genresData.length === 0) {
+        return <section className="genres-section" id="photography" style={{ minHeight: '100vh', backgroundColor: '#F4F3F2' }} />;
+    }
+
     return (
         <section className="genres-section" id="photography">
             <div className="genres-container">
                 {genresData.map((genre, index) => (
-                    /* THE FIX: Changed div to Link and added the "state" prop */
                     <Link
                         to="/photography"
                         state={{ filterCategory: genre.title }}
@@ -34,11 +55,11 @@ const Genres = () => {
                         key={genre.id}
                         style={{
                             top: `calc(15vh + ${index * 30}px)`,
-                            textDecoration: 'none' /* Prevents underline on the text */
+                            textDecoration: 'none'
                         }}
                     >
                         <div className="genre-card">
-                            <img src={genre.img} alt={genre.title} className="genre-img" />
+                            <img src={genre.img} alt={genre.title} className="genre-img" loading="lazy" />
                             <div className="genre-overlay">
                                 <div className="genre-title-wrapper">
                                     <h2 className="genre-title">{genre.title}</h2>

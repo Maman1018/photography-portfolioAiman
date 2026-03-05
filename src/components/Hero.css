@@ -182,8 +182,6 @@
 }
 
 
-
-
 @media (max-width: 768px) {
     .navbar-container {
         --nav-pad: 20px; /* Adapts for mobile */
