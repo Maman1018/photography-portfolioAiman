@@ -17,17 +17,22 @@ const PhotographyPage = () => {
     useEffect(() => {
         client.getEntries({ content_type: 'photo' })
             .then((response) => {
-                const fetchedPhotos = response.items.map(item => {
+                // 🚨 THE FIX: Use flatMap to unpack multiple images per entry!
+                const fetchedPhotos = response.items.flatMap(item => {
                     const imgData = item.fields.image;
-                    const actualImg = Array.isArray(imgData) ? imgData[0] : imgData;
 
-                    return {
-                        id: item.sys.id,
+                    // Force it into an array even if there's only 1 image, so we can loop it safely
+                    const imagesArray = Array.isArray(imgData) ? imgData : (imgData ? [imgData] : []);
+
+                    // Loop through EVERY image in this entry
+                    return imagesArray.map((singleImg, index) => ({
+                        // Make a unique ID by combining the entry ID and the image index!
+                        id: `${item.sys.id}-${index}`,
                         title: item.fields.title,
                         category: item.fields.category,
-                        url: actualImg?.fields?.file?.url
-                    };
-                }).filter(photo => photo.url);
+                        url: singleImg?.fields?.file?.url
+                    }));
+                }).filter(photo => photo.url); // Drop any empty ones
 
                 setPhotos(fetchedPhotos);
                 setLoading(false);

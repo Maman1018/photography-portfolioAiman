@@ -52,14 +52,18 @@ const Hero = () => {
 
                 // 2. SETUP THE UNLIMITED DOME GALLERY IMAGES
                 const domeUrls = photos
-                    // Find ONLY the photos where the toggle is checked "Yes" (true)
+                    // Find ONLY the entries where the toggle is checked "Yes"
                     .filter(p => p.fields.showInDomeGallery === true)
-                    .map(p => {
+                    // 🚨 THE FIX: Use flatMap to unpack all images inside those entries
+                    .flatMap(p => {
                         const imgData = p.fields.image;
-                        const actualImg = Array.isArray(imgData) ? imgData[0] : imgData;
-                        const url = actualImg?.fields?.file?.url;
-                        // Grab a massive 2000px version for the 3D gallery
-                        return url ? optimizeImg(url, 2000) : null;
+                        const imagesArray = Array.isArray(imgData) ? imgData : (imgData ? [imgData] : []);
+
+                        // Extract the URL for every single image
+                        return imagesArray.map(singleImg => {
+                            const url = singleImg?.fields?.file?.url;
+                            return url ? optimizeImg(url, 2000) : null;
+                        });
                     })
                     .filter(Boolean); // Remove any empty/null values
 
