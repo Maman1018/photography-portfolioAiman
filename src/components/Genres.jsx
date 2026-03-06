@@ -8,33 +8,26 @@ const Genres = () => {
     const [genresData, setGenresData] = useState([]);
 
     useEffect(() => {
-        // Fetch all photos (Change 'portfolioPhoto' to your Content Type ID if needed!)
-        client.getEntries({ content_type: 'photo' })
+        // 🚨 THE FIX: Fetch specifically from the new 'genre' Content Model
+        client.getEntries({ content_type: 'genre' })
             .then(response => {
-                const allPhotos = response.items;
-                const extractedGenres = [];
-                const seenCategories = new Set();
+                const fetchedGenres = response.items.map(item => {
+                    const title = item.fields.title;
+                    const imgData = item.fields.coverImage;
 
-                allPhotos.forEach(item => {
-                    const cat = item.fields.category;
-                    const imgData = item.fields.image;
-
-                    // 🚨 THE FIX: Open the array
+                    // Safely grab the image URL
                     const actualImg = Array.isArray(imgData) ? imgData[0] : imgData;
                     const imgUrl = actualImg?.fields?.file?.url;
 
-                    if (cat && imgUrl && !seenCategories.has(cat)) {
-                        seenCategories.add(cat);
-                        extractedGenres.push({
-                            id: item.sys.id,
-                            title: cat,
-                            // Fetch an optimized 1200px image for the crisp background cover
-                            img: optimizeImg(imgUrl, 1200)
-                        });
-                    }
-                });
+                    return {
+                        id: item.sys.id,
+                        title: title,
+                        // Fetch an optimized 1200px image for the crisp background cover
+                        img: imgUrl ? optimizeImg(imgUrl, 1200) : null
+                    };
+                }).filter(g => g.title && g.img); // Only keep valid genres
 
-                setGenresData(extractedGenres);
+                setGenresData(fetchedGenres);
             })
             .catch(err => console.error("Error fetching genres:", err));
     }, []);
@@ -44,6 +37,7 @@ const Genres = () => {
         return <section className="genres-section" id="photography" style={{ minHeight: '100vh', backgroundColor: '#F4F3F2' }} />;
     }
 
+    // 🚨 YOUR UNTOUCHED WORKING RENDER STRUCTURE
     return (
         <section className="genres-section" id="photography">
             <div className="genres-container">

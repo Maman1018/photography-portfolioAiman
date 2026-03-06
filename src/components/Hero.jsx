@@ -98,7 +98,7 @@ const Hero = () => {
     const domeScale = useTransform(scrollYProgress, [0.38, 0.48], [0.8, 1]);
     const curtainOpacity = useTransform(scrollYProgress, [0.38, 0.48], [1, 0]);
     const domePointer = useTransform(scrollYProgress, [0.45, 0.48], ["none", "auto"]);
-    const instructionsOpacity = useTransform(scrollYProgress, [0.48, 0.55], [0, 1]);
+    const instructionsOpacity = useTransform(scrollYProgress, [0.35, 0.4], [0, 1]);
 
     return (
         <>
