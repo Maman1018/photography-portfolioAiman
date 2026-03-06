@@ -50,7 +50,7 @@ const Footer = () => {
             {/* Bottom Bar */}
             <div className="footer-bottom">
                 <span>&copy; 2026 AIMAN IZZAT</span>
-                <span>Created by AIMAN IZZAT with the help of Gemini</span>
+                <span>Created by AIMAN IZZAT </span>
             </div>
         </footer>
     );

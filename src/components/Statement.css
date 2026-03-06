@@ -46,18 +46,41 @@
     font-family: 'Inter', sans-serif;
     font-size: clamp(0.9rem, 1.5vw, 1.2rem);
     font-weight: 500;
-    color: rgba(26,26,26,0.8) ;
     letter-spacing: 0.8em;
     text-transform: uppercase;
     text-align: center;
-
-    /* THE FIX: Remove top margin, add a negative bottom margin
-       to pull the giant text upwards! */
     margin: 0 0 -10vh 0;
-
-    /* Keeps it visually above the giant text if they overlap */
     z-index: 2;
     position: relative;
+
+    /* 1. THE GRADIENT: Dark grey -> Metallic Silver -> Dark grey */
+    background: linear-gradient(
+            120deg,
+            rgba(26, 26, 26, 0.8) 35%,
+            #E8E8E8 50%, /* The bright metallic silver peak */
+            rgba(26, 26, 26, 0.8) 65%
+    );
+
+    /* Make the background 3x wider than the text so we have room to slide it */
+    background-size: 300% auto;
+
+    /* 2. THE CLIP: Make the text transparent so the gradient shows through */
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    /* 3. THE ANIMATION: Runs for 9 seconds total, loops forever */
+    animation: elegantShine 15s linear infinite;
+}
+
+/* --- THE SHINE KEYFRAMES --- */
+@keyframes elegantShine {
+    /* 0% to 45% (about 4 seconds): Slowly elegantly sweep from right to left */
+    0% { background-position: 200% center; }
+    45% { background-position: -100% center; }
+
+    /* 45% to 100% (about 5 seconds): Sit invisibly at the end and wait before repeating */
+    100% { background-position: -100% center; }
 }
 
 /* --- 3. THE GIANT EXISTING TEXT --- */
@@ -72,4 +95,45 @@
     margin: 0;
 
     text-align: center;
+}
+
+/* --- ANIMATED HOVER UNDERLINE --- */
+.hover-underline {
+    position: relative;
+    display: inline-block; /* Ensures the underline matches the exact text width */
+    cursor: pointer;
+}
+
+.hover-underline::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px; /* Thickness of the underline */
+    bottom: 15px; /* Distance from the bottom of the letters */
+    left: 0; /* Anchors the line to the left so it draws left-to-right */
+    background-color: #1a1a1a; /* Matches the text color */
+    border-radius: 2px;
+
+    /* Smooth, elegant easing function */
+    transition: width 3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hover-underline:hover::after {
+    width: 100%; /* Expands the line fully! */
+}
+
+/* --- WORD SLIDER CONTAINER --- */
+.word-slider-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    vertical-align: bottom; /* Keeps the invisible placeholder aligned with the text */
+}
+
+/* Positions the animated words directly over the invisible placeholder */
+.slider-word {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    white-space: nowrap; /* Prevents the text from ever wrapping to a new line */
 }
