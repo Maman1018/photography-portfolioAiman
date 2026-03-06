@@ -1,5 +1,8 @@
 /* src/components/Statement.css */
 
+/* Import the requested Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@300;400;500;600&display=swap');
+
 .statement-section {
     width: 100%;
     min-height: 120vh;
@@ -19,29 +22,54 @@
     z-index: 20;
 }
 
-.statement-small {
-    font-family: 'Poppins', sans-serif;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    color: #1a1a1a;
+/* --- 1. THE NEW INTRO TEXT --- */
+.statement-intro {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
     font-weight: 400;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    color: #1a1a1a;
+    line-height: 1.2;
     text-align: center;
-    margin: 0 0 10vh 0;
+    margin: 25vh 0 35vh 0; /* Pushes the next elements down a bit */
 }
 
-.statement-small span {
-    display: block;
+/* The cursive Figma-style font */
+.font-caveat {
+    font-family: 'Caveat', cursive;
+    font-weight: 500;
+    font-size: 1.3em; /* Slightly larger to match Inter's visual weight */
+    color: #1a1a1a;
 }
 
+/* --- 2. THE SUBTLE SUBTITLE --- */
+.statement-small {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+    font-weight: 500;
+    color: rgba(26,26,26,0.8) ;
+    letter-spacing: 0.8em;
+    text-transform: uppercase;
+    text-align: center;
+
+    /* THE FIX: Remove top margin, add a negative bottom margin
+       to pull the giant text upwards! */
+    margin: 0 0 -10vh 0;
+
+    /* Keeps it visually above the giant text if they overlap */
+    z-index: 2;
+    position: relative;
+}
+
+/* --- 3. THE GIANT EXISTING TEXT --- */
 .statement-big {
     font-family: 'Poppins', sans-serif;
-    font-size: clamp(6rem, 22vw, 30rem);
+    font-size: clamp(6rem, 22vw, 25rem);
     color: #1a1a1a;
-    font-weight: 500;
-    line-height: 0.8;
-    letter-spacing: -0.05em;
-    text-align: center;
-    white-space: nowrap;
+    line-height: 1.5;
+
+    /* THE FIX: Force the top margin to 0 so the browser
+       doesn't push it away from the subtitle */
     margin: 0;
+
+    text-align: center;
 }

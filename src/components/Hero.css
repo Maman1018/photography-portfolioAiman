@@ -1,9 +1,4 @@
-/* src/components/Hero.css */
-
-/* =========================================
-   PART 1: YOUR STABLE NAVBAR & UI STYLES
-   (Do not touch these, they work perfectly)
-   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@300;400;500;600&display=swap');
 
 /* The Frame Wrapper (reused inside the grid now) */
 .hero-frame-wrapper {
