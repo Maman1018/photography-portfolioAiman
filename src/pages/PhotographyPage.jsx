@@ -14,6 +14,8 @@ const PhotographyPage = () => {
     const [photos, setPhotos] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const [showTopBtn, setShowTopBtn] = useState(false);
+
     useEffect(() => {
         client.getEntries({ content_type: 'photo' })
             .then((response) => {
@@ -43,6 +45,21 @@ const PhotographyPage = () => {
             });
     }, []);
 
+    // NEW: Scroll Listener for Back to Top Button
+    useEffect(() => {
+        const handleScroll = () => {
+            // Show button after scrolling down 400 pixels
+            if (window.scrollY > 400) {
+                setShowTopBtn(true);
+            } else {
+                setShowTopBtn(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     const dynamicCategories = ['All', ...new Set(photos.map(p => p.category).filter(Boolean))];
 
     const filteredPhotos = filter === 'All'
@@ -62,6 +79,8 @@ const PhotographyPage = () => {
             document.body.style.overflow = 'auto';
         }
     };
+
+    const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if (loading) {
         return <div className="photo-page"><h2 style={{color: '#1a1a1a', textAlign: 'center', marginTop: '20vh'}}>Loading Gallery...</h2></div>;
@@ -115,6 +134,17 @@ const PhotographyPage = () => {
                     </div>
                 </div>
             )}
+            {/* NEW: Back to Top Button */}
+            <button
+                className={`photo-back-to-top ${showTopBtn ? 'visible' : ''}`}
+                onClick={scrollToTop}
+                title="Back to top"
+            >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="12" y1="19" x2="12" y2="5" />
+                    <polyline points="5 12 12 5 19 12" />
+                </svg>
+            </button>
         </div>
     );
 };

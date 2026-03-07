@@ -150,3 +150,64 @@
     .masonry-grid { column-count: 1; padding: 0 20px; }
     .photo-header { flex-direction: column; gap: 20px; padding: 20px; }
 }
+
+/* --- Back to Top Button --- */
+.photo-back-to-top {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+
+    /* Matches your premium Glassmorphism style */
+    background: rgba(26, 26, 26, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    z-index: 1000;
+
+    /* Hidden by default, floats down */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.photo-back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.photo-back-to-top:hover {
+    background: rgba(26, 26, 26, 0.8);
+}
+
+.photo-back-to-top svg {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+}
+
+/* Add a subtle "lift" effect to the arrow on hover */
+.photo-back-to-top:hover svg {
+    transform: translateY(-3px);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .photo-back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+    }
+}
