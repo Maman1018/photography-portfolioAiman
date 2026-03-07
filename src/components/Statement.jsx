@@ -46,7 +46,7 @@ const Statement = () => {
     };
 
     return (
-        <section className="statement-section">
+        <section className="statement-section" id="statement">
 
             {/* 1. THE NEW INTRO STATEMENT */}
             <h2 className="statement-intro">

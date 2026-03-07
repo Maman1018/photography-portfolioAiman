@@ -7,6 +7,7 @@ import Statement from './components/Statement';
 import Genres from './components/Genres';
 import Footer from './components/Footer';
 import PhotographyPage from './pages/PhotographyPage';
+import FloatingNav from './components/FloatingNav';
 
 // We wrap your previous homepage sections inside a single component
 const Home = () => (
@@ -22,6 +23,8 @@ function App() {
     return (
         <Router basename="/photography-portfolioAiman">
             {/* THE FIX: We tell React Router that the app lives inside this specific folder */}
+            <FloatingNav />
+
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/photography" element={<PhotographyPage />} />

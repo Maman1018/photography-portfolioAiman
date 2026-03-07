@@ -1,11 +1,34 @@
 // src/components/Footer.jsx
-import React from 'react';
-import { Link } from 'react-router-dom'; // <--- Import Link
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { client } from '../contentfulClient'; // <-- Import your Contentful client
 import './Footer.css';
 
 const Footer = () => {
+    // State to hold the dynamic Resume URL
+    const [resumeUrl, setResumeUrl] = useState('');
+
+    useEffect(() => {
+        // Fetch the specific 'resume' content model from Contentful
+        client.getEntries({ content_type: 'resume', limit: 1 })
+            .then(response => {
+                if (response.items.length > 0) {
+                    const fileData = response.items[0].fields.file;
+
+                    // Safely extract the URL (just in case Contentful returns an array or object)
+                    const actualFile = Array.isArray(fileData) ? fileData[0] : fileData;
+                    const url = actualFile?.fields?.file?.url;
+
+                    if (url) {
+                        setResumeUrl(url);
+                    }
+                }
+            })
+            .catch(error => console.error("Error fetching resume:", error));
+    }, []);
+
     return (
-        <footer className="footer-section">
+        <footer className="footer-section" id="footer">
 
             {/* Central Camera Logo */}
             <div className="footer-logo-area">
@@ -31,9 +54,17 @@ const Footer = () => {
                     <h4>Navigate</h4>
                     <ul>
                         <li><Link to="/">About</Link></li>
-                        {/* FIX: Use React Router Link! */}
                         <li><Link to="/photography">Photography</Link></li>
-                        <li><a href="#resume">Resume</a></li>
+                        {/* 🚨 THE FIX: Dynamic Resume Link */}
+                        <li>
+                            <a
+                                href={resumeUrl || "#"}
+                                target={resumeUrl ? "_blank" : "_self"}
+                                rel="noreferrer"
+                            >
+                                Resume
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
