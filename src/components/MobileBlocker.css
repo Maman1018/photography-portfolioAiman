@@ -1,0 +1,38 @@
+/* src/components/MobileBlocker.css */
+
+.mobile-blocker-container {
+    position: fixed;
+    inset: 0;
+    background-color: #F4F3F2; /* Matches your site's aesthetic */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999; /* Ensures it is above absolutely everything */
+    padding: 40px;
+    text-align: center;
+    color: #1a1a1a;
+}
+
+.mobile-blocker-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.blocker-logo {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.blocker-message {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    opacity: 0.6;
+    max-width: 280px;
+    margin: 0;
+}

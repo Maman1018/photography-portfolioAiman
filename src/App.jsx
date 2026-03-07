@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 import PhotographyPage from './pages/PhotographyPage';
 import FloatingNav from './components/FloatingNav';
 import PageTransition from './components/PageTransition';
+import MobileBlocker from './components/MobileBlocker'; // 1. IMPORT ADDED HERE
 
 const Home = () => (
     <PageTransition>
@@ -22,7 +23,6 @@ const Home = () => (
     </PageTransition>
 );
 
-// We create a wrapper component for the routes to use 'useLocation'
 const AnimatedRoutes = () => {
     const location = useLocation();
 
@@ -45,10 +45,13 @@ const AnimatedRoutes = () => {
 
 function App() {
     return (
-        <Router basename="/photography-portfolioAiman">
-            <FloatingNav />
-            <AnimatedRoutes />
-        </Router>
+        /* 2. WRAP EVERYTHING IN THE MOBILE BLOCKER */
+        <MobileBlocker>
+            <Router basename="/photography-portfolioAiman">
+                <FloatingNav />
+                <AnimatedRoutes />
+            </Router>
+        </MobileBlocker>
     );
 }
 
