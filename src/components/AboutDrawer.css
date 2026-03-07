@@ -3,7 +3,7 @@
 .drawer-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4); /* Dims the background */
+    background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(4px);
     z-index: 2000;
 }
@@ -12,64 +12,140 @@
     position: fixed;
     top: 0;
     right: 0;
-    width: 100%;
-    max-width: 500px; /* Elegant width for the bio */
+    /* 1/4 of the screen width, but won't get smaller than 400px on phones */
+    width: 30vw;
+    min-width: 400px;
     height: 100vh;
-    background: rgba(244, 243, 242, 0.85); /* Matches your site background with transparency */
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: #F4F3F2; /* Pure white */
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
     z-index: 2001;
     display: flex;
     flex-direction: column;
-    padding: 60px 40px;
     box-sizing: border-box;
-    overflow-y: auto; /* Scroll if content is long */
+    color: #1a1a1a;
 }
 
-.drawer-close {
-    position: absolute;
-    top: 20px;
-    right: 30px;
+/* We put the padding here instead of on the main drawer,
+   so the picture at the bottom can ignore the padding and touch the edges */
+.drawer-inner-content {
+    padding: 30px 30px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Pushes the picture down to the bottom */
+    overflow-y: auto;
+}
+
+/* --- HEADER --- */
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: -30px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.drawer-close-text {
     background: none;
     border: none;
-    font-size: 2.5rem;
     cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    text-transform: inherit;
+    letter-spacing: inherit;
     color: #1a1a1a;
-    opacity: 0.5;
     transition: opacity 0.3s;
 }
 
-.drawer-close:hover {
-    opacity: 1;
+.drawer-close-text:hover {
+    opacity: 0.5;
 }
 
+/* --- MAIN TEXT --- */
 .about-name {
-    font-family: 'Inter', sans-serif;
-    font-size: 2.5rem;
-    font-weight: 600;
-    margin-bottom: 30px;
-    color: #1a1a1a;
+    font-family: 'Poppins', sans-serif;
+    font-size: 4em; /* Big font */
+    font-weight: 400;
+    margin-bottom: 1px;
+    line-height: 1.1;
+    letter-spacing: -2px;
 }
 
 .about-description {
-    font-family: 'Inter', sans-serif;
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: rgba(26, 26, 26, 0.8);
-    margin-bottom: 40px;
-    white-space: pre-wrap; /* Preserves paragraphs from Contentful */
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem; /* Smaller black font */
+    line-height: 1.4;
+    opacity: 0.8;
+    white-space: pre-wrap;
+
 }
 
+/* --- DIVIDER --- */
+.drawer-divider {
+    width: 100%;
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.5); /* Subtle thin line */
+    margin: 10px 0 20px 0;
+}
+
+/* --- CONNECT SECTION --- */
+.drawer-connect {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+}
+
+.connect-title {
+    opacity: 0.5;
+}
+
+.connect-links {
+    display: flex;
+    justify-content: space-between;
+}
+
+.social-left {
+    display: flex;
+    gap: 20px;
+}
+
+.connect-links a {
+    color: #1a1a1a;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.connect-links a:hover {
+    opacity: 0.5;
+}
+
+/* --- FULL BLEED PICTURE --- */
 .about-photo-container {
     width: 100%;
-    margin-top: auto; /* Pushes the picture to the bottom */
+    height: 48vh; /* Takes up about the bottom third of the drawer */
+    flex-shrink: 0;
+
+    /* ADD THESE TWO LINES TO CENTER THE IMAGE */
+    display: flex;
+    justify-content: center;
 }
 
 .about-photo {
-    width: 100%;
-    height: auto;
-    border-radius: 4px;
-    filter: grayscale(20%); /* Optional: Matches your aesthetic */
-    object-fit: cover;
+    width: 70%;
+    height: 100%;
+    object-fit: cover; /* Crops nicely without stretching */
+    display: block;
+    filter: grayscale(10%); /* Optional: Adds a slight cinematic feel */
+} /* <-- Don't forget this closing bracket! */
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .about-drawer {
+        width: 100vw;
+        min-width: 100vw;
+    }
 }

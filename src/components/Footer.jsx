@@ -81,7 +81,7 @@ const Footer = () => {
             {/* Bottom Bar */}
             <div className="footer-bottom">
                 <span>&copy; 2026 AIMAN IZZAT</span>
-                <span>Created by AIMAN IZZAT </span>
+                <span>Created by AIMAN IZZAT (with React and CSS) </span>
             </div>
         </footer>
     );

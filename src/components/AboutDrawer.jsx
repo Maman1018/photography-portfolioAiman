@@ -28,7 +28,7 @@ const AboutDrawer = ({ isOpen, onClose }) => {
         <AnimatePresence>
             {isOpen && (
                 <>
-                    {/* BACKDROP: Dims the background and handles "click anywhere outside" */}
+                    {/* BACKDROP */}
                     <motion.div
                         className="drawer-backdrop"
                         initial={{ opacity: 0 }}
@@ -45,26 +45,48 @@ const AboutDrawer = ({ isOpen, onClose }) => {
                         exit={{ x: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                     >
-                        {/* CLOSE BUTTON (X) */}
-                        <button className="drawer-close" onClick={onClose}>&times;</button>
+                        {/* TOP PADDED CONTENT AREA */}
+                        <div className="drawer-inner-content">
 
-                        <div className="drawer-content">
+                            {/* Header: About ... Close */}
+                            <div className="drawer-header">
+                                <span className="drawer-label">(About)</span>
+                                <button className="drawer-close-text" onClick={onClose}>Close</button>
+                            </div>
+
+                            {/* Main Bio */}
                             <h2 className="about-name">{aboutData?.name || "Loading..."}</h2>
-
                             <p className="about-description">
                                 {aboutData?.description || "..."}
                             </p>
 
-                            {aboutData?.photo && (
-                                <div className="about-photo-container">
-                                    <img
-                                        src={optimizeImg(aboutData.photo, 1200)}
-                                        alt={aboutData.name}
-                                        className="about-photo"
-                                    />
+                            {/* Divider Line */}
+                            <hr className="drawer-divider" />
+
+                            {/* Let's Connect Section */}
+                            <div className="drawer-connect">
+                                <span className="connect-title">Let's connect</span>
+                                <div className="connect-links">
+                                    <div className="social-left">
+                                        <a href="https://www.instagram.com/maman1018/" target="_blank" rel="noreferrer">IG</a>
+                                        <a href="https://www.facebook.com/aiman.izzat.92" target="_blank" rel="noreferrer">Facebook</a>
+                                    </div>
+                                    <a href="mailto:coolmaman59@gmail.com" className="email-right">Email</a>
                                 </div>
-                            )}
+                            </div>
+
                         </div>
+
+                        {/* BOTTOM FULL-BLEED PICTURE */}
+                        {aboutData?.photo && (
+                            <div className="about-photo-container">
+                                <img
+                                    src={optimizeImg(aboutData.photo, 1200)}
+                                    alt={aboutData.name}
+                                    className="about-photo"
+                                />
+                            </div>
+                        )}
                     </motion.div>
                 </>
             )}
