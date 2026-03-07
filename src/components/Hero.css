@@ -345,3 +345,30 @@
     border-radius: 50%;
     opacity: 0.5;
 }
+
+.nav-about-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    /* Force inheritance */
+    font-family: Poppins, serif;
+    font-size: 15px;
+    font-weight: 300;
+    text-transform: inherit;
+    letter-spacing: inherit;
+
+    /* Default color (usually white at top of hero) */
+    color: #F4F3F2;
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+/* When the navbar shrinks/changes color on scroll */
+.scrolled .nav-about-btn {
+    color: #F4F3F2;
+}
+
+.nav-about-btn:hover {
+    opacity: 0.6;
+}

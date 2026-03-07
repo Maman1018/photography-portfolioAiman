@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { client, optimizeImg } from '../contentfulClient';
 import './Hero.css';
+import AboutDrawer from './AboutDrawer';
 
 import DomeGallery from '../reactBits/DomeGallery';
 
@@ -13,6 +14,8 @@ const Hero = () => {
     // State to hold your 5 specific Hero photos
     const [heroData, setHeroData] = useState(null);
     const [domeImages, setDomeImages] = useState([]);
+
+    const [isAboutOpen, setIsAboutOpen] = useState(false);
 
 
     useEffect(() => {
@@ -111,7 +114,12 @@ const Hero = () => {
                     <h1 className="brand-name nav-anim-item nav-brand-short">AI</h1>
                     <div className="nav-slot right" style={{ marginLeft: 'auto', zIndex: 10 }}>
                         <nav className="frame-links">
-                            <a href="#designs">Design</a>
+                            <button
+                                onClick={() => setIsAboutOpen(true)}
+                                className="nav-about-btn"
+                            >
+                                About
+                            </button>
                             <Link to="/photography">Photography</Link>
                         </nav>
                     </div>
@@ -214,6 +222,8 @@ const Hero = () => {
 
                     </div>
                 </div>
+
+            <AboutDrawer isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
         </>
     );
 };
