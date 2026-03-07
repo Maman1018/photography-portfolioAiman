@@ -1,34 +1,53 @@
 // src/App.jsx
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 
-// --- Pages / Sections ---
+// --- Components ---
 import Hero from './components/Hero';
 import Statement from './components/Statement';
 import Genres from './components/Genres';
 import Footer from './components/Footer';
 import PhotographyPage from './pages/PhotographyPage';
 import FloatingNav from './components/FloatingNav';
+import PageTransition from './components/PageTransition';
 
-// We wrap your previous homepage sections inside a single component
 const Home = () => (
-    <div className="app-container">
-        <Hero />
-        <Statement />
-        <Genres />
-        <Footer />
-    </div>
+    <PageTransition>
+        <div className="app-container">
+            <Hero />
+            <Statement />
+            <Genres />
+            <Footer />
+        </div>
+    </PageTransition>
 );
+
+// We create a wrapper component for the routes to use 'useLocation'
+const AnimatedRoutes = () => {
+    const location = useLocation();
+
+    return (
+        <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+                <Route path="/" element={<Home />} />
+                <Route
+                    path="/photography"
+                    element={
+                        <PageTransition>
+                            <PhotographyPage />
+                        </PageTransition>
+                    }
+                />
+            </Routes>
+        </AnimatePresence>
+    );
+};
 
 function App() {
     return (
         <Router basename="/photography-portfolioAiman">
-            {/* THE FIX: We tell React Router that the app lives inside this specific folder */}
             <FloatingNav />
-
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/photography" element={<PhotographyPage />} />
-            </Routes>
+            <AnimatedRoutes />
         </Router>
     );
 }
