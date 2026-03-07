@@ -86,7 +86,7 @@
 /* --- 3. THE GIANT EXISTING TEXT --- */
 .statement-big {
     font-family: 'Poppins', sans-serif;
-    font-size: clamp(6rem, 22vw, 25rem);
+    font-size: clamp(5rem, 20vw, 25rem);
     color: #1a1a1a;
     line-height: 1.5;
 
