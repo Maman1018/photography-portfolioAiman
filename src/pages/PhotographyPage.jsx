@@ -17,6 +17,10 @@ const PhotographyPage = () => {
     const [showTopBtn, setShowTopBtn] = useState(false);
 
     useEffect(() => {
+        window.scrollTo(0,0);
+    }, []);
+
+    useEffect(() => {
         client.getEntries({ content_type: 'photo' })
             .then((response) => {
                 // 🚨 THE FIX: Use flatMap to unpack multiple images per entry!
