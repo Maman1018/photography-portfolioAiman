@@ -34,7 +34,7 @@ const Genres = () => {
 
     // While loading, just render an empty section to maintain page layout
     if (genresData.length === 0) {
-        return <section className="genres-section" id="photography" style={{ minHeight: '100vh', backgroundColor: '#F4F3F2' }} />;
+        return <section className="genres-section" id="photography" style={{ minHeight: '100vh', backgroundColor: 'var(--bg-color)' }} />;
     }
 
     // 🚨 YOUR UNTOUCHED WORKING RENDER STRUCTURE

@@ -5,17 +5,24 @@ import { Link } from 'react-router-dom';
 import { client, optimizeImg } from '../contentfulClient';
 import './Hero.css';
 import AboutDrawer from './AboutDrawer';
-
 import DomeGallery from '../reactBits/DomeGallery';
+
+// 🚨 IMPORT OUR NEW GLOBAL HOOK
+import { useTheme } from '../ThemeContext';
 
 const Hero = () => {
     const [scrolled, setScrolled] = useState(false);
+    const [isAboutOpen, setIsAboutOpen] = useState(false);
+
+    // 🚨 THE DECOUPLED BRAIN: Pull state and function from the Global Context!
+    const { isDarkMode, toggleTheme } = useTheme();
+
+    // State to track if the logo is being hovered (this stays local because it's just for the button animation)
+    const [isHovered, setIsHovered] = useState(false);
 
     // State to hold your 5 specific Hero photos
     const [heroData, setHeroData] = useState(null);
     const [domeImages, setDomeImages] = useState([]);
-
-    const [isAboutOpen, setIsAboutOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -62,7 +69,6 @@ const Hero = () => {
             .catch(err => console.error("Error fetching hero images:", err));
     }, []);
 
-
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -77,19 +83,15 @@ const Hero = () => {
     const textOpacity = useTransform(scrollYProgress, [0, 0.06], [1, 0]);
 
     // --- PHASE 2: THE MUSEUM VOID (0.25 to 0.55) ---
-    // 🚨 THE FIX: Reduced the "dead space" by starting the blur early at 0.25!
     const gridBlur = useTransform(scrollYProgress, [0.25, 0.4, 0.55], ["blur(0px)", "blur(30px)", "blur(30px)"]);
     const gridOpacity = useTransform(scrollYProgress, [0.25, 0.45, 0.55], [1, 1, 0]);
 
     const gridPointer = useTransform(scrollYProgress, [0.25, 0.4], ["auto", "none"]);
 
-    // The Killswitch shifted back safely to 0.6
     const gridDisplay = useTransform(scrollYProgress, (pos) => (pos >= 0.6 ? "none" : "flex"));
 
     // --- PHASE 3: THE DOME REVEAL (0.25 to 0.55) ---
     const domeScale = useTransform(scrollYProgress, [0.25, 0.55], [0.8, 1]);
-
-    // Curtain fades out exactly as the Grid reaches max blur
     const curtainOpacity = useTransform(scrollYProgress, [0.25, 0.4], [1, 0]);
 
     const domePointer = useTransform(scrollYProgress, [0.45, 0.55], ["none", "auto"]);
@@ -102,8 +104,78 @@ const Hero = () => {
                 <div className="camera-icon-box nav-anim-item nav-camera">
                     <div className="camera-lens"></div><div className="camera-flash"></div>
                 </div>
+
                 <h1 className="brand-name nav-anim-item nav-brand-full">AIMAN IZZAT</h1>
-                <h1 className="brand-name nav-anim-item nav-brand-short">AI</h1>
+
+                {/* THE BUTTON */}
+                <h1
+                    className="brand-name nav-anim-item nav-brand-short"
+                    onClick={toggleTheme} /* Still magically works via context! */
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    style={{
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '45px',
+                        height: '45px',
+                        borderRadius: '50%',
+                        margin: 0,
+                        zIndex: 50,
+                        overflow: 'hidden',
+                        backgroundColor: isHovered
+                            ? (isDarkMode ? '#F4F3F2' : '#121212')
+                            : 'transparent'
+                    }}
+                    title="Toggle Theme"
+                >
+                    <span style={{
+                        position: 'absolute',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '100%',
+                        height: '100%',
+                        color: '#F4F3F2',
+                        transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease',
+                        transform: isHovered ? 'translateX(-30px)' : 'translateX(0)',
+                        opacity: isHovered ? 0 : 1,
+                    }}>
+                        AI
+                    </span>
+
+                    <span style={{
+                        position: 'absolute',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '100%',
+                        height: '100%',
+                        transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease',
+                        transform: isHovered ? 'translateX(0)' : 'translateX(30px)',
+                        opacity: isHovered ? 1 : 0,
+                    }}>
+                        {isDarkMode ? (
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFCC00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                        ) : (
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                        )}
+                    </span>
+                </h1>
+
                 <div className="nav-slot right" style={{ marginLeft: 'auto', zIndex: 10 }}>
                     <nav className="frame-links">
                         <button
@@ -120,8 +192,6 @@ const Hero = () => {
             {/* THE HERO SCROLL EXPERIENCE */}
             <div ref={containerRef} className="scroll-timeline-container">
                 <div className="sticky-viewport">
-
-                    {/* LAYER 1: The Original Hero Grid */}
                     <motion.div
                         style={{
                             opacity: gridOpacity,
@@ -134,7 +204,6 @@ const Hero = () => {
                         }}
                     >
                         <div className="gallery-grid">
-                            {/* LEFT COLUMN */}
                             <motion.div className="grid-col side-col" style={{ opacity: sideOpacity, scale: sideScale, y: sideY }}>
                                 <div className="grid-item">
                                     {heroData?.leftTop && <img src={optimizeImg(heroData.leftTop, 800)} alt="" decoding="sync" loading="eager" />}
@@ -144,7 +213,6 @@ const Hero = () => {
                                 </div>
                             </motion.div>
 
-                            {/* CENTER COLUMN */}
                             <motion.div className="grid-col center-col" style={{ width: centerWidth }}>
                                 <div className="hero-frame-wrapper">
                                     <div className="hero-frame">
@@ -161,7 +229,6 @@ const Hero = () => {
                                 </div>
                             </motion.div>
 
-                            {/* RIGHT COLUMN */}
                             <motion.div className="grid-col side-col" style={{ opacity: sideOpacity, scale: sideScale, y: sideY }}>
                                 <div className="grid-item">
                                     {heroData?.rightTop && <img src={optimizeImg(heroData.rightTop, 800)} alt="" decoding="sync" loading="eager"/>}
@@ -173,21 +240,20 @@ const Hero = () => {
                         </div>
                     </motion.div>
 
-                    {/* LAYER 2: The Dome Gallery */}
                     <motion.div
                         style={{
                             scale: domeScale,
                             pointerEvents: domePointer,
                             position: 'absolute', inset: 0,
                             zIndex: 10,
-                            backgroundColor: '#F4F3F2',
+                            backgroundColor: 'var(--bg-color, #F4F3F2)',
                             display: 'flex', justifyContent: 'center', alignItems: 'center'
                         }}
                     >
                         {domeImages.length > 0 && (
                             <DomeGallery
                                 images={domeImages}
-                                overlayBlurColor="#F4F3F2"
+                                overlayBlurColor={isDarkMode ? '#121212' : '#F4F3F2'}
                                 grayscale={false}
                             />
                         )}
@@ -195,7 +261,7 @@ const Hero = () => {
                             style={{
                                 position: 'absolute',
                                 inset: '-20%',
-                                backgroundColor: '#F4F3F2',
+                                backgroundColor: 'var(--curtain-color, #F4F3F2)',
                                 opacity: curtainOpacity,
                                 pointerEvents: 'none',
                                 zIndex: 20
@@ -203,7 +269,6 @@ const Hero = () => {
                         />
                     </motion.div>
 
-                    {/* LAYER 3: Dome Instructions Overlay */}
                     <motion.div
                         className="dome-instructions"
                         style={{ opacity: instructionsOpacity }}
@@ -212,7 +277,6 @@ const Hero = () => {
                         <span className="instruction-dot"></span>
                         <span>Tap to expand</span>
                     </motion.div>
-
                 </div>
             </div>
 

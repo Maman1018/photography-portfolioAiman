@@ -1,7 +1,7 @@
 /* src/components/Footer.css */
 .footer-section {
     width: 100%;
-    background-color: #F4F3F2;
+    background-color: var(--bg-color);
 
     /* THE FIX: This pulls the footer up to close the 60vh gap from Genres */
     margin-top: -50vh;
@@ -10,7 +10,7 @@
     box-sizing: border-box;
     border-top: 1px solid rgba(0,0,0,0.05);
     font-family: 'Poppins', sans-serif;
-    color: #1a1a1a;
+    color: var(--text-color);
 
     /* Ensures the footer sits above the 'dead space' of the previous section */
     position: relative;
@@ -29,6 +29,7 @@
     font-size: 1.8rem;
     margin-bottom: 20px;
     font-weight: 500;
+
 }
 
 .footer-bio p {
@@ -57,6 +58,18 @@
     transform: translateY(-3px);
 }
 
+/* --- 🚨 DARK MODE OVERRIDE FOR CONTACT BUTTON --- */
+body.dark-mode .contact-btn {
+    /* In Dark Mode: White/Off-white background, Dark text */
+    background: #F4F3F2;
+    color: #121212;
+}
+
+body.dark-mode .contact-btn:hover {
+    background: #ffffff; /* Slightly brighter on hover in dark mode */
+    transform: translateY(-3px);
+}
+
 /* Link Columns */
 .footer-links-col h4 {
     font-size: 0.8rem;
@@ -64,6 +77,7 @@
     letter-spacing: 0.2em;
     margin-bottom: 30px;
     opacity: 0.4;
+
 }
 
 .footer-links-col ul {
@@ -78,7 +92,7 @@
 
 .footer-links-col a {
     text-decoration: none;
-    color: #1a1a1a;
+    color: var(--text-color);
     font-size: 1.1rem;
     transition: opacity 0.3s;
 }
@@ -102,7 +116,7 @@
 .footer-camera-box {
     width: 80px;
     height: 55px;
-    border: 3px solid #1a1a1a;
+    border: 3px solid var(--text-color);
     border-radius: 8px;
     position: relative;
     opacity: 0.8;
@@ -111,7 +125,7 @@
 .footer-camera-lens {
     width: 24px;
     height: 24px;
-    border: 3px solid #1a1a1a;
+    border: 3px solid var(--text-color);
     border-radius: 50%;
     position: absolute;
     top: 50%;
@@ -122,7 +136,7 @@
 .footer-camera-flash {
     width: 6px;
     height: 6px;
-    background: #1a1a1a;
+    background-color: var(--text-color);
     border-radius: 50%;
     position: absolute;
     top: 8px;

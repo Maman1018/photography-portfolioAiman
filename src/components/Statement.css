@@ -6,7 +6,7 @@
 .statement-section {
     width: 100%;
     min-height: 120vh;
-    background-color: #F4F3F2;
+    background-color: var(--bg-color);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -27,7 +27,7 @@
     font-family: 'Inter', sans-serif;
     font-size: clamp(2.5rem, 5vw, 4.5rem);
     font-weight: 400;
-    color: #1a1a1a;
+    color: var(--text-color);
     line-height: 1.2;
     text-align: center;
     margin: 25vh 0 35vh 0; /* Pushes the next elements down a bit */
@@ -38,7 +38,7 @@
     font-family: 'Caveat', cursive;
     font-weight: 500;
     font-size: 1.3em; /* Slightly larger to match Inter's visual weight */
-    color: #1a1a1a;
+    color: var(--text-color); /* ✅ Now it flips! */
 }
 
 /* --- 2. THE SUBTLE SUBTITLE --- */
@@ -87,7 +87,7 @@
 .statement-big {
     font-family: 'Poppins', sans-serif;
     font-size: clamp(5rem, 20vw, 25rem);
-    color: #1a1a1a;
+    color: var(--text-color);
     line-height: 1.5;
 
     /* THE FIX: Force the top margin to 0 so the browser
@@ -102,6 +102,7 @@
     position: relative;
     display: inline-block; /* Ensures the underline matches the exact text width */
     cursor: pointer;
+
 }
 
 .hover-underline::after {
@@ -111,7 +112,7 @@
     height: 2px; /* Thickness of the underline */
     bottom: 15px; /* Distance from the bottom of the letters */
     left: 0; /* Anchors the line to the left so it draws left-to-right */
-    background-color: #1a1a1a; /* Matches the text color */
+    background-color: var(--text-color, #1a1a1a);
     border-radius: 2px;
 
     /* Smooth, elegant easing function */
@@ -136,4 +137,19 @@
     left: 0;
     bottom: 0;
     white-space: nowrap; /* Prevents the text from ever wrapping to a new line */
+}
+
+/* --- DARK MODE OVERRIDE FOR THE SHINE --- */
+body.dark-mode .statement-small {
+    /* Dimmed off-white -> Pure Brilliant White -> Dimmed off-white */
+    background: linear-gradient(
+            120deg,
+            rgba(244, 243, 242, 0.5) 35%,
+            #FFFFFF 50%,
+            rgba(244, 243, 242, 0.5) 65%
+    );
+    background-size: 300% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
 }

@@ -21,4 +21,17 @@ body {
     overflow-x: hidden;
     overscroll-behavior: none;
     touch-action: pan-y;
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* --- THE DARK THEME --- */
+/* When we add the 'dark-mode' class to the body, these values override the default ones */
+body.dark-mode {
+    /* A deep, cinematic charcoal/black */
+    --bg-color: #121212;
+    /* The text flips to your off-white */
+    --text-color: #F4F3F2;
+
+    --nav-text: #F4F3F2;
+    --curtain-color: #121212;
 }

@@ -338,12 +338,20 @@
 
 }
 
+body.dark-mode .dome-instructions {
+    color: rgba(244, 243, 242, 0.8);
+}
+
 .instruction-dot {
     width: 4px;
     height: 4px;
     background-color: #1a1a1a;
     border-radius: 50%;
     opacity: 0.5;
+}
+
+body.dark-mode .instruction-dot {
+    background-color: rgba(244, 243, 242, 0.8);
 }
 
 .nav-about-btn {
