@@ -70,34 +70,30 @@ const Hero = () => {
     });
 
     // --- PHASE 1: THE ASSEMBLE (0 to 0.2) ---
-    // (Rest period remains from 0.2 to 0.3)
     const centerWidth = useTransform(scrollYProgress, [0, 0.2], ["100%", "40%"]);
     const sideY = useTransform(scrollYProgress, [0.1, 0.2], ["100vh", "0px"]);
     const sideOpacity = useTransform(scrollYProgress, [0.1, 0.2], [0, 1]);
     const sideScale = useTransform(scrollYProgress, [0.1, 0.2], [0.5, 1]);
     const textOpacity = useTransform(scrollYProgress, [0, 0.06], [1, 0]);
 
-    // --- PHASE 2: THE MUSEUM VOID (0.3 to 0.6) ---
+    // --- PHASE 2: THE MUSEUM VOID (0.25 to 0.55) ---
+    // 🚨 THE FIX: Reduced the "dead space" by starting the blur early at 0.25!
+    const gridBlur = useTransform(scrollYProgress, [0.25, 0.4, 0.55], ["blur(0px)", "blur(30px)", "blur(30px)"]);
+    const gridOpacity = useTransform(scrollYProgress, [0.25, 0.45, 0.55], [1, 1, 0]);
 
-    // 🚨 THE FIX: Elongated True Rack Focus!
-    // Blur aggressively ramps to 30px (0.3 to 0.45), holds, then fades out safely (0.5 to 0.6).
-    const gridBlur = useTransform(scrollYProgress, [0.3, 0.45, 0.6], ["blur(0px)", "blur(30px)", "blur(30px)"]);
-    const gridOpacity = useTransform(scrollYProgress, [0.3, 0.5, 0.6], [1, 1, 0]);
+    const gridPointer = useTransform(scrollYProgress, [0.25, 0.4], ["auto", "none"]);
 
-    const gridPointer = useTransform(scrollYProgress, [0.3, 0.45], ["auto", "none"]);
+    // The Killswitch shifted back safely to 0.6
+    const gridDisplay = useTransform(scrollYProgress, (pos) => (pos >= 0.6 ? "none" : "flex"));
 
-    // The Killswitch moved back to safely cover the longer fade
-    const gridDisplay = useTransform(scrollYProgress, (pos) => (pos >= 0.65 ? "none" : "flex"));
+    // --- PHASE 3: THE DOME REVEAL (0.25 to 0.55) ---
+    const domeScale = useTransform(scrollYProgress, [0.25, 0.55], [0.8, 1]);
 
-    // --- PHASE 3: THE DOME REVEAL (0.3 to 0.6) ---
-    // Dome stretches out its gentle zoom to match the new timeline
-    const domeScale = useTransform(scrollYProgress, [0.3, 0.6], [0.8, 1]);
+    // Curtain fades out exactly as the Grid reaches max blur
+    const curtainOpacity = useTransform(scrollYProgress, [0.25, 0.4], [1, 0]);
 
-    // Curtain fades out early (0.3 to 0.45) to reveal the Dome right as the Grid reaches max blur
-    const curtainOpacity = useTransform(scrollYProgress, [0.3, 0.45], [1, 0]);
-
-    const domePointer = useTransform(scrollYProgress, [0.5, 0.6], ["none", "auto"]);
-    const instructionsOpacity = useTransform(scrollYProgress, [0.5, 0.6], [0, 1]);
+    const domePointer = useTransform(scrollYProgress, [0.45, 0.55], ["none", "auto"]);
+    const instructionsOpacity = useTransform(scrollYProgress, [0.28, 0.55], [0, 1]);
 
     return (
         <>
@@ -129,7 +125,7 @@ const Hero = () => {
                     <motion.div
                         style={{
                             opacity: gridOpacity,
-                            filter: gridBlur, /* 🚨 LUXURY RACK FOCUS BLUR */
+                            filter: gridBlur,
                             pointerEvents: gridPointer,
                             display: gridDisplay,
                             position: 'absolute', inset: '20px',
