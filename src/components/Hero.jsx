@@ -184,7 +184,7 @@ const Hero = () => {
                         >
                             About
                         </button>
-                        <Link to="/photography">Photography</Link>
+                        <Link to="/">Photography</Link>
                     </nav>
                 </div>
             </div>

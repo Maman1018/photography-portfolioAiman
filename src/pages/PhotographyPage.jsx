@@ -98,7 +98,7 @@ const PhotographyPage = () => {
             <header className="photo-header">
 
                 {/* FIX 3: Re-applied your specific photo-logo class for the brand styling */}
-                <Link to="/" className="photo-logo">AIMAN IZZAT</Link>
+                <Link to="/home" className="photo-logo">AIMAN IZZAT</Link>
 
                 {/* FIX 4: Changed filter-nav to photo-nav */}
                 <nav className="photo-nav">

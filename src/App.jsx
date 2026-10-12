@@ -1,8 +1,7 @@
 // src/App.jsx
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
-// --- Components ---
 import Hero from './components/Hero';
 import Statement from './components/Statement';
 import Genres from './components/Genres';
@@ -28,20 +27,23 @@ const AnimatedRoutes = () => {
 
     return (
         <>
-            {/* THIS FIXES IT: FloatingNav will ONLY show on the Home page ('/') */}
-            {location.pathname === '/' && <FloatingNav />}
+            {/* FloatingNav only on the landing page */}
+            {location.pathname === '/home' && <FloatingNav />}
 
             <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
-                    <Route path="/" element={<Home />} />
                     <Route
-                        path="/photography"
+                        path="/"
                         element={
                             <PageTransition>
                                 <PhotographyPage />
                             </PageTransition>
                         }
                     />
+                    <Route path="/home" element={<Home />} />
+                    {/* Old links keep working */}
+                    <Route path="/photography" element={<Navigate to="/" replace />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </AnimatePresence>
         </>
@@ -52,7 +54,6 @@ function App() {
     return (
         <MobileBlocker>
             <Router basename="/photography-portfolioAiman">
-                {/* FloatingNav was removed from here and moved into AnimatedRoutes */}
                 <AnimatedRoutes />
             </Router>
         </MobileBlocker>

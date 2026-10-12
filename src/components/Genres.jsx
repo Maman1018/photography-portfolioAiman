@@ -43,7 +43,7 @@ const Genres = () => {
             <div className="genres-container">
                 {genresData.map((genre, index) => (
                     <Link
-                        to="/photography"
+                        to="/"
                         state={{ filterCategory: genre.title }}
                         className="genre-card-wrapper"
                         key={genre.id}

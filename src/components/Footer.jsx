@@ -54,7 +54,7 @@ const Footer = () => {
                     <h4>Navigate</h4>
                     <ul>
                         <li><Link to="/">About</Link></li>
-                        <li><Link to="/photography">Photography</Link></li>
+                        <li><Link to="/">Photography</Link></li>
                         {/* 🚨 THE FIX: Dynamic Resume Link */}
                         <li>
                             <a
